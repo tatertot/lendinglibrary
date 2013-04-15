@@ -1,3 +1,4 @@
-Judgemental Eye: A Movie Rating App
-===================================
-Head on over to [the tutorial](http://chriszf.github.com/ratings) for instructions.
+Borrow It Back : A Lending Library That Helps You Keep Track of Your Stuff
+============================================================================
+
+More soon...
