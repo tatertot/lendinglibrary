@@ -1,0 +1,57 @@
+Users
+Id
+First Name
+Last Name
+email(username)
+city
+state
+zip code
+
+Friends/Connections
+Id
+User Id
+Friend
+Relationship Type
+
+Library
+Id
+Product Id
+Product
+Category
+
+Products
+Id
+Name
+Category Id
+ASIN - 
+image - URL
+
+Category
+Id
+Category
+
+History
+Id
+Product Id
+Friend Id
+Transaction(Borrow/Lend)
+Date Requested
+Date Returned
+Estimated Return Date
+
+Notification
+id
+lender
+borrower
+message
+date
+
+User has many products
+User has many subscribers
+
+Products belong to many categories?
+Products belong to many users?
+
+
+
+
