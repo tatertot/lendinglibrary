@@ -1,11 +1,14 @@
 Users
 Id
+email(username)
 First Name
 Last Name
-email(username)
+password
 city
 state
 zip code
+
+INSERT INTO users VALUES (null, "password", "Yari", "Dog", "yaridog@gmail.com", "San Francisco", "CA", "94530");
 
 Friends/Connections
 Id
