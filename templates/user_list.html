@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<h1>Users</h1>
+
+<h2>Complete User List</h2>
+
+{% for user in users %}
+
+
+<h3>User {{ user.id }}: {{ user.fname }}, has {{ user.libraries|length }} products</h3>
+
+{% endfor %}
+
+{% for product in library %}
+<p>Product descprition: {{ product.product_desc }}</p>
+<img src='{{ product.product.default_photo }}' />
+
+
+{% endfor %}
+
+{% endblock %}

@@ -7,11 +7,8 @@ from sqlalchemy import ForeignKey
 
 
 #This is SQLAlchemy's way of interacting with the db, creating a session
-# engine = create_engine("sqlite:///library.db", echo=False)
-# session = scoped_session(sessionmaker(bind=engine,autocommit = False, autoflush = False))
-
-ENGINE = None
-Session = None
+engine = create_engine("sqlite:///library.db", echo=False)
+session = scoped_session(sessionmaker(bind=engine,autocommit = False, autoflush = False))
 
 Base = declarative_base()
 Base.query = session.query_property()
@@ -59,6 +56,9 @@ class Library(Base):
 	product_desc = Column(String(64), nullable  = True)
 	status = Column(Integer(1), nullable = False)
 
+	user = relationship("User", backref=backref("libraries", order_by=id))
+	product = relationship("Product", backref=backref("libraries", order_by=id))
+
 # class Subscriber(Base):
 
 # 	__tablename__ = "subscribers"
@@ -92,14 +92,6 @@ class History(Base):
 #  	date = Column(DateTime(),  default=datetime.datetime.now)
 
 ### End class declarations
-def connect():
-    global ENGINE
-    global Session
-
-    ENGINE = create_engine("sqlite:///library.db", echo=True)
-    Session = sessionmaker(bind=ENGINE)
-
-    return Session()
 
 def main():
     """In case we need this for something"""
