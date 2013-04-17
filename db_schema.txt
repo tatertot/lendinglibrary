@@ -35,12 +35,18 @@ Category
 
 History
 Id
+Borrower_Id
+Lender_Id
 Product Id
-Friend Id
-Transaction(Borrow/Lend)
 Date Requested
 Date Returned
 Estimated Return Date
+
+Comments
+Id
+history_id
+Comment
+Date_Sent
 
 Notification
 id

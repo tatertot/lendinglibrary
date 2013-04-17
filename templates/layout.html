@@ -26,6 +26,9 @@
             </ul>
 
           </div><!--/.nav-collapse -->
+            {% if user_id %}
+            <span style="float:right;color:#fff">Hello,  User {{ user_id }}!</span>
+            {% endif %}
         </div>
       </div>
     </div>

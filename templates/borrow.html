@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+<form method="POST", action="/borrow_request" class="form-signin">
+	
+	<h2 class="form-signin-heading">Can I Borrow Your #{{ product_id }}?<br />
+
+	</h2>
+	<input type="hidden" value="{{ product_id }}" name="product_id" />
+	<input type="hidden" value="{{ lender_id }}" name="lender_id" />
+	<input type="hidden" value="test" name="test" />
+	<label for="test">Lorem Ipsum</label>
+	<input type="text" class="input-block-level" name="test" value="{{ user_id }}"></input><br />
+	<input type="submit" class="btn btn-large btn-primary" value="Submit Request">
+</form>
+
+{% endblock %}

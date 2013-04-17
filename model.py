@@ -1,7 +1,7 @@
 import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
-from sqlalchemy import Column, Integer, String, DateTime
+from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import sessionmaker, scoped_session, relationship, backref
 from sqlalchemy import ForeignKey
 
@@ -21,10 +21,11 @@ class User(Base):
     id = Column(Integer, primary_key = True)
     email = Column(String(64), nullable = False)
     fname = Column(String(64), nullable  = False)
-    lname = Column(String(64), nullable  = False)
+    lname = Column(String(64), nullable  = True)
+    phone_number = Column(String(15), nullable = True)
     password = Column(String(64), nullable  = False)
-    city = Column(String(64), nullable  = False)
-    state = Column(String(15), nullable  = False)
+    city = Column(String(64), nullable  = True)
+    state = Column(String(15), nullable  = True)
     zipcode = Column(String(15),nullable=True)
 
 class Category(Base):
@@ -40,27 +41,25 @@ class Product(Base):
 	__tablename__ = "products"
 
 	id = Column(Integer, primary_key = True)
-	name = Column(String(64), nullable  = False)
-	asin = Column(String(64), nullable  = True)
-	category_id = Column(Integer(8), ForeignKey('categories.id'), nullable = True)
-	default_photo = Column(String(128), nullable  = True)
-	custom_photo = Column(String(128), nullable  = True)
+	name = Column(String(), nullable  = False)
+	asin = Column(String(), nullable  = True)
+	category_id = Column(Integer(), ForeignKey('categories.id'), nullable = True)
+	default_photo = Column(String(), nullable  = True)
+	custom_photo = Column(String(), nullable  = True)
 
 class Library(Base):
 
 	__tablename__ = "libraries"
 
 	id = Column(Integer, primary_key = True)
-	user_id = Column(Integer(8), ForeignKey('users.id'), nullable = True)
-	product_id = Column(Integer(8), ForeignKey('products.id'), nullable = True)
+	user_id = Column(Integer(), ForeignKey('users.id'), nullable = True)
+	product_id = Column(Integer(), ForeignKey('products.id'), nullable = True)
 	product_desc = Column(String(64), nullable  = True)
-	status = Column(Integer(1), nullable = False)
-
+	status = Column(Integer(), nullable = False)
 	user = relationship("User", backref=backref("libraries", order_by=id))
 	product = relationship("Product", backref=backref("libraries", order_by=id))
 
 # class Subscriber(Base):
-
 # 	__tablename__ = "subscribers"
 
 # 	id = Column(Integer, primary_key = True)
@@ -73,23 +72,36 @@ class History(Base):
 	__tablename__ = "histories"
 
 	id = Column(Integer, primary_key = True)
-	user_id = Column(Integer(8), ForeignKey('users.id'), nullable = False)
-	product_id = Column(Integer(8), ForeignKey('products.id'), nullable = False)
-	transaction = Column(String(12), nullable  = False)
+	lender_id = Column(Integer(), ForeignKey('users.id'), nullable = False)
+	borrower_id = Column(Integer(), ForeignKey('users.id'), nullable = False)
+	product_id = Column(Integer(), ForeignKey('products.id'), nullable = False)
 	date_requested = Column(DateTime(),  default=datetime.datetime.now)
-	date_borrowed = Column(DateTime(),  default=datetime.datetime.now)
+	date_wanted = Column(DateTime(),  nullable  = True)
+	flexible = Column(Boolean(), default=False)
+	date_borrowed = Column(DateTime(),  nullable  = True)
 	date_returned_est = Column(DateTime(), nullable  = True)
-	date_returned = Column(DateTime(), nullable  = False)
+	date_returned = Column(DateTime(), nullable  = True)
+	declined = Column(Boolean(), default=False)
+#lender is you, date wanted is in the future, declined is false, date borrowed is empty
 
-# class Notification(Base):
+class Comment(Base):
 
-#  	__tablename__ = "notifications"
+	__tablename__ = "comments"
 
-#  	id = Column(Integer, primary_key = True)
-#  	lender = Column(Integer(8), ForeignKey('users.id'), nullable = False)
-#  	borrower = Column(Integer(8), ForeignKey('users.id'), nullable = False)
-#  	message = Column(Text(), nullable  = False)
-#  	date = Column(DateTime(),  default=datetime.datetime.now)
+	id = Column(Integer, primary_key = True)
+	history_id = Column(Integer(), ForeignKey('histories.id'), nullable = False)
+	comment = Column(String(), nullable  = False)
+	date_sent = Column(DateTime(),  default=datetime.datetime.now)
+
+class Notification(Base):
+
+ 	__tablename__ = "notifications"
+
+ 	id = Column(Integer, primary_key = True)
+ 	lender = Column(Integer(8), ForeignKey('users.id'), nullable = False)
+ 	borrower = Column(Integer(8), ForeignKey('users.id'), nullable = False)
+ 	message = Column(String(), nullable  = False)
+ 	date = Column(DateTime(),  default=datetime.datetime.now)
 
 ### End class declarations
 

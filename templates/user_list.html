@@ -2,7 +2,6 @@
 {% block body %}
 
 <h1>Users</h1>
-
 <h2>Complete User List</h2>
 
 {% for user in users %}
@@ -10,12 +9,13 @@
 
 <h3>User {{ user.id }}: {{ user.fname }}, has {{ user.libraries|length }} products</h3>
 
-{% endfor %}
-
-{% for product in library %}
+{% for product in user.libraries %}
 <p>Product descprition: {{ product.product_desc }}</p>
 <img src='{{ product.product.default_photo }}' />
 
+<p><a href='{{ url_for("borrow", product_id=product.id, lender_id=user.id ) }}'>Borrow</a></p>
+
+{% endfor %}
 
 {% endfor %}
 
