@@ -1,16 +1,23 @@
 {% extends "layout.html" %}
 {% block body %}
-<form method="POST", action="/borrow_request" class="form-signin">
+<form method="POST", action='{{ url_for("borrow_request") }}' class="form-signin">
 	
-	<h2 class="form-signin-heading">Can I Borrow Your #{{ product_id }}?<br />
+	<h3 class="form-signin-heading">Can I Borrow Your {{ library_item.product.name }}?<br />
 
-	</h2>
-	<input type="hidden" value="{{ product_id }}" name="product_id" />
-	<input type="hidden" value="{{ lender_id }}" name="lender_id" />
-	<input type="hidden" value="test" name="test" />
-	<label for="test">Lorem Ipsum</label>
-	<input type="text" class="input-block-level" name="test" value="{{ user_id }}"></input><br />
+	</h3>
+	<input type="hidden" value="{{ library_item.product_id }}" name="product_id" />
+	<input type="hidden" value="{{ library_item.user_id }}" name="lender_id" />
+	<input type="hidden" value="{{ user_id }}" name="user_id" />
+	<img src='{{ library_item.product.default_photo }}' />
+	<label for="start_date">Borrow On:</label>
+	<input type="text" id="start_date" class="datepicker" />
+	<label for="start_date">Return On:</label>
+	<input type="text" id="end_date" class="datepicker" />
+	<!--label for="start_date">Message:</label-->
+	<!--textarea rows="5" class="input-block-level" name="message"></textarea-->
 	<input type="submit" class="btn btn-large btn-primary" value="Submit Request">
 </form>
+
+
 
 {% endblock %}

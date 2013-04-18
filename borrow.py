@@ -1,7 +1,23 @@
 from flask import Flask, flash, render_template, redirect, request, url_for, escape, session
+from wtforms import Form, BooleanField, TextField, PasswordField, validators
 import model
 
 app = Flask(__name__)
+
+# class BorrowRequest(Form):
+# 	#get borrower id
+# 	borrower_id = HiddenField('borrower_id')
+# 	#get lender id
+# 	lender_id = HiddenField('lender_id')
+# 	#get product id
+# 	product_id = HiddenField('product_id')
+# 	#get request date
+# 	date_requested = HiddenField['date_requested']
+# 	#get date producted is wanted
+# 	date_wanted = TextField['start_date']
+# 	#get date producted is going to be returned
+# 	date_wanted = TextField['end_date']
+
 
 @app.route("/")
 def index():
@@ -21,6 +37,7 @@ def login():
 	return render_template("login.html")
 
 # Logout user
+@app.route("/logout")
 def logout():
 	# remove the username from the session if it's there
     session.pop('user_id', None)
@@ -54,28 +71,38 @@ def user_library():
 # create borrow request
 @app.route("/borrow/<int:product_id>/<int:lender_id>", methods=["GET"])
 def borrow(product_id, lender_id):
-	#ind_rating = model.session.query(model.Rating).filter_by(user_id = user_id, movie_id = movie_id).first()
-	return render_template("borrow.html")
+	user_id = session.get("user_id", None)
+	library_item = model.session.query(model.Library).filter_by(product_id = product_id).first()
+	return render_template("borrow.html", library_item = library_item, user_id=user_id)
 
-@app.route("/borrow_request", methods=["POST"])
+@app.route("/borrow_request", methods=['POST'])
 def borrow_request():
+	# form = BorrowRequest(request.form)
+	# if request.method == 'POST' and form.validate():
+	# 	borrow
+
 	#get borrower id
-	borrower_id = request.form['borrower_id']
+	borrower_id = request.form['user_id']
 	#get lender id
 	lender_id = request.form['lender_id']
 	#get product id
 	product_id = request.form['product_id']
 	#get request date
-	date_requested = request.form['date_requested']
 	#get date producted is wanted
-	date_wanted = request.form['date_request']
-
+	date_wanted = request.form['start_date']
+	date_wanted_format = model.datetime.datetime.strptime(date_wanted, "%d-%b-%Y")
+	#get date producted is going to be returned
+	date_returned_est = request.form['end_date']
+	date_returned_est_format = model.datetime.datetime.strptime(date_returned_est, "%d-%b-%Y")
+	#optional message
+	#message = request.form['message']
 	#create query
-	request = model.History(borrower_id = borrower_id, lender_id = lender_id, product_id = product_id, date_requested=date_requested, date_wanted=date_wanted)
+	borrow_request = model.History(borrower_id = borrower_id, lender_id = lender_id, product_id = product_id, date_wanted=start_date, date_returned_est=end_date)
 	#add the object to a session
-	model.session.add(request)
+	model.session.add(borrow_request)
     #commit session
 	model.session.commit()
+
 	return redirect("/")
 
 # accept contact's borrow request

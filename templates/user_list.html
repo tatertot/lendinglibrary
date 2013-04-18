@@ -13,6 +13,7 @@
 <p>Product descprition: {{ product.product_desc }}</p>
 <img src='{{ product.product.default_photo }}' />
 
+<!-- change this to borrow/lend based on user -->
 <p><a href='{{ url_for("borrow", product_id=product.id, lender_id=user.id ) }}'>Borrow</a></p>
 
 {% endfor %}
