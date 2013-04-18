@@ -89,15 +89,15 @@ def borrow_request():
 	product_id = request.form['product_id']
 	#get request date
 	#get date producted is wanted
-	date_wanted = request.form['start_date']
-	date_wanted_format = model.datetime.datetime.strptime(date_wanted, "%d-%b-%Y")
+	#date_wanted = request.form['start_date']
+	#date_wanted_format = model.datetime.datetime.strptime(date_wanted, "%d-%b-%Y")
 	#get date producted is going to be returned
-	date_returned_est = request.form['end_date']
-	date_returned_est_format = model.datetime.datetime.strptime(date_returned_est, "%d-%b-%Y")
+	#date_returned_est = request.form['end_date']
+	#date_returned_est_format = model.datetime.datetime.strptime(date_returned_est, "%d-%b-%Y")
 	#optional message
 	#message = request.form['message']
 	#create query
-	borrow_request = model.History(borrower_id = borrower_id, lender_id = lender_id, product_id = product_id, date_wanted=start_date, date_returned_est=end_date)
+	borrow_request = model.History(borrower_id = borrower_id, lender_id = lender_id, product_id = product_id)
 	#add the object to a session
 	model.session.add(borrow_request)
     #commit session
