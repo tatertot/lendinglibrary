@@ -4,6 +4,10 @@ from sqlalchemy import create_engine
 from sqlalchemy import Column, Integer, String, DateTime, Boolean
 from sqlalchemy.orm import sessionmaker, scoped_session, relationship, backref
 from sqlalchemy import ForeignKey
+from app import db
+
+ROLE_USER = 0
+ROLE_ADMIN = 1
 
 
 #This is SQLAlchemy's way of interacting with the db, creating a session

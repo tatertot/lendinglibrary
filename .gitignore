@@ -16,7 +16,6 @@ develop-eggs
 env
 # Installer logs
 pip-log.txt
-notes.txt
 
 # Unit test / coverage reports
 .coverage
@@ -27,3 +26,6 @@ notes.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+notes.txt
+config.py
