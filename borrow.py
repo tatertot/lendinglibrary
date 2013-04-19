@@ -8,21 +8,6 @@ from flask.ext.login import LoginManager, current_user
 
 app = Flask(__name__)
 
-# class BorrowRequest(Form):
-# 	#get borrower id
-# 	borrower_id = HiddenField('borrower_id')
-# 	#get lender id
-# 	lender_id = HiddenField('lender_id')
-# 	#get product id
-# 	product_id = HiddenField('product_id')
-# 	#get request date
-# 	date_requested = HiddenField['date_requested']
-# 	#get date producted is wanted
-# 	date_wanted = TextField['start_date']
-# 	#get date producted is going to be returned
-# 	date_wanted = TextField['end_date']
-
-
 @app.route("/")
 def index():
 	user_id = session.get("user_id", None)
@@ -99,26 +84,25 @@ def user_library():
 # create borrow request
 @app.route("/borrow/<int:product_id>/<int:lender_id>", methods=["POST","GET"])
 def borrow(product_id, lender_id):
-	form = BorrowForm()
 	user_id = session.get("user_id", None)
-
+	form = BorrowForm(product_id=product_id, lender_id=lender_id, user_id=user_id)
 # @app.route("/borrow_request", methods=['GET','POST'])
 # def borrow_request():
 # 	form = BorrowForm()
 	# if request.method == 'POST' and form.validate():
 	# 	borrow
 	if form.validate_on_submit():
-		borrower_id = form.user_id.data
-		lender_id = form.lender_id.data
+		borrower_id = 1
+		lender_id = 2
 		product_id = form.product_id.data
 		date_wanted = datetime.datetime.strptime(form.start_date.data, "%d-%b-%Y")
 		date_returned_est = datetime.datetime.strptime(form.end_date.data, "%d-%b-%Y")
 
-
 		#optional message
 		#message = request.form['message']
 		#create query
-		borrow_request = model.History(borrower_id=borrower_id, lender_id=lender_id, product_id=product_id)
+		borrow_request = model.History(borrower_id=borrower_id, lender_id=lender_id, product_id=product_id,
+										date_wanted=date_wanted, date_returned_est=date_returned_est)
 		#Add the object to a session and commit it.
 		model.session.add(borrow_request)
 		model.session.commit()
@@ -126,7 +110,7 @@ def borrow(product_id, lender_id):
 	else:
 		flash("didn't work")
 
-	library_item = model.session.query(model.Library).filter_by(product_id= product_id).first()
+	library_item = model.session.query(model.Library).filter_by(product_id=product_id).first()
 	return render_template("borrow.html", library_item=library_item, user_id=user_id, form=form)
 
 # accept contact's borrow request

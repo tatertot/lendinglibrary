@@ -6,9 +6,9 @@
 <img src='{{ library_item.product.default_photo }}' />
 
 	{{form.hidden_tag()}}
-	{{form.product_id(value="1")}}
-	{{form.lender_id(value="1")}}
-	{{form.user_id(value="1")}}
+	{{form.product_id()}}
+	{{form.lender_id()}}
+	{{form.user_id()}}
 
  	<label for="start_date">Start Date</label>
   	{{form.start_date(class="datepicker")}}
