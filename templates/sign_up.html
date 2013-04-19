@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<form method="POST" action="/sign_up" name ="signup_page">
+  <h2 class="form-signin-heading">Sign Up</h2>
+
+  {{form.hidden_tag()}}
+
+  <label for="fname">First Name</label>
+  {{form.fname(size = 30)}}
+  {% for error in form.errors.fname %}
+  <span style = "color: red;">[{{error}}]</span>
+  {% endfor %}
+
+  <label for="lname">Last Name</label>
+  {{form.lname(size = 30)}}
+  {% for error in form.errors.lname %}
+  <span style = "color: red;">[{{error}}]</span>
+  {% endfor %}
+
+  <label for="email">Email</label>
+  {{form.email(size = 30)}}
+  {% for error in form.errors.email %}
+  <span style = "color: red;">[{{error}}]</span>
+  {% endfor %}
+
+  <label for="confrim_email">Confirm Email</label>
+  {{form.confirm_email(size = 30)}}
+  {% for error in form.errors.confirm_email %}
+  <span style = "color: red;">[{{error}}]</span>
+  {% endfor %}
+
+  <label for="password">Password</label>
+  {{form.password(size = 30)}}
+  {% for error in form.errors.password %}
+  <span style = "color: red;">[{{error}}]</span>
+  {% endfor %}
+
+  <label for="confirm_password">Confirm Password</label>
+  {{form.confirm_password(size = 30)}}
+  {% for error in form.errors.confirm_password%}
+  <span style = "color: red;">[{{error}}]</span>
+  {% endfor %}
+
+<p><input type = "submit" value = "Sign Up"></input></p>
+</form>
+{% endblock %}

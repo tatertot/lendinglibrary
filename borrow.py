@@ -1,6 +1,10 @@
+import datetime
 from flask import Flask, flash, render_template, redirect, request, url_for, escape, session
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 import model
+from forms import BorrowForm, SignUpForm
+from flask.ext.login import login_user, logout_user, login_required
+from flask.ext.login import LoginManager, current_user
 
 app = Flask(__name__)
 
@@ -59,9 +63,33 @@ def authenticate():
 		flash("Incorrect Email/Password Combo. Please try again.")
 		return redirect("/login")
 
-# view contact list
-def users():
-	pass
+#signup form
+@app.route('/sign_up', methods = ["POST","GET"])
+def form():
+  form = SignUpForm()
+  if form.validate_on_submit():
+    user = model.session.query(model.User).filter(model.User.email == form.email.data).first()
+    if user != None:
+      user_email = user.email
+      if user_email == form.email.data:
+        flash ("email already exists")
+        return redirect(url_for("form"))
+    if user == None:
+      fname = form.fname.data
+      lname = form.lname.data
+      email = form.email.data
+      password = form.password.data
+      new_user = model.User(id = None,
+                            email=email,
+                            password=password,
+                            fname=fname,
+                            lname=lname)
+      model.session.add(new_user)
+      model.session.commit()
+      return redirect("/")
+  return render_template("sign_up.html", title="Sign Up Form", form=form)
+
+
 
 # user's lending library
 # click on username and view list of producsts in their library
@@ -69,41 +97,37 @@ def user_library():
 	pass
 
 # create borrow request
-@app.route("/borrow/<int:product_id>/<int:lender_id>", methods=["GET"])
+@app.route("/borrow/<int:product_id>/<int:lender_id>", methods=["POST","GET"])
 def borrow(product_id, lender_id):
+	form = BorrowForm()
 	user_id = session.get("user_id", None)
-	library_item = model.session.query(model.Library).filter_by(product_id = product_id).first()
-	return render_template("borrow.html", library_item = library_item, user_id=user_id)
 
-@app.route("/borrow_request", methods=['POST'])
-def borrow_request():
-	# form = BorrowRequest(request.form)
+# @app.route("/borrow_request", methods=['GET','POST'])
+# def borrow_request():
+# 	form = BorrowForm()
 	# if request.method == 'POST' and form.validate():
 	# 	borrow
+	if form.validate_on_submit():
+		borrower_id = form.user_id.data
+		lender_id = form.lender_id.data
+		product_id = form.product_id.data
+		date_wanted = datetime.datetime.strptime(form.start_date.data, "%d-%b-%Y")
+		date_returned_est = datetime.datetime.strptime(form.end_date.data, "%d-%b-%Y")
 
-	#get borrower id
-	borrower_id = request.form['user_id']
-	#get lender id
-	lender_id = request.form['lender_id']
-	#get product id
-	product_id = request.form['product_id']
-	#get request date
-	#get date producted is wanted
-	#date_wanted = request.form['start_date']
-	#date_wanted_format = model.datetime.datetime.strptime(date_wanted, "%d-%b-%Y")
-	#get date producted is going to be returned
-	#date_returned_est = request.form['end_date']
-	#date_returned_est_format = model.datetime.datetime.strptime(date_returned_est, "%d-%b-%Y")
-	#optional message
-	#message = request.form['message']
-	#create query
-	borrow_request = model.History(borrower_id = borrower_id, lender_id = lender_id, product_id = product_id)
-	#add the object to a session
-	model.session.add(borrow_request)
-    #commit session
-	model.session.commit()
 
-	return redirect("/")
+		#optional message
+		#message = request.form['message']
+		#create query
+		borrow_request = model.History(borrower_id=borrower_id, lender_id=lender_id, product_id=product_id)
+		#Add the object to a session and commit it.
+		model.session.add(borrow_request)
+		model.session.commit()
+		return redirect("/")
+	else:
+		flash("didn't work")
+
+	library_item = model.session.query(model.Library).filter_by(product_id= product_id).first()
+	return render_template("borrow.html", library_item=library_item, user_id=user_id, form=form)
 
 # accept contact's borrow request
 def lend():
@@ -132,6 +156,8 @@ def return_product():
 # user checks product back into their library
 def check_in_product():
 	pass
+
+CSRF_ENABLED = True
 # set the secret key.  keep this really secret:
 app.secret_key = 'banana banana banana'
 
