@@ -33,7 +33,6 @@ def sign_up():
 
 # login as a user 	
 @app.route("/login", methods=["GET","POST"])
-@app.route("/login", methods = ["GET", "POST"])
 def login():
   # update the last_login and number of logins everytime that the user logs into the db
   # dont allow user to re-login after they've done so
@@ -148,6 +147,12 @@ def return_product():
 # user checks product back into their library
 def check_in_product():
 	pass
+
+@app.route("/notifications/<int:user_id>")
+def request_notifications(user_id):
+	notifications = model.session.query(model.History).filter_by(lender_id=user_id)
+	library = model.session.query(model.Library).filter_by(user_id=user_id)
+	return render_template("notifications.html", notifications=notifications, library=library, user_id=user_id)
 
 CSRF_ENABLED = True
 # set the secret key.  keep this really secret:

@@ -30,6 +30,7 @@ class User(Base):
     state = Column(String(15), nullable  = True)
     zipcode = Column(String(15),nullable=True)
 
+    # add methods for the Flask-login to work
     def is_authenticated(self):
         return True
 
