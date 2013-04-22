@@ -1,22 +1,25 @@
 {% extends "layout.html" %}
 {% block body %}
-<form method="POST", action='{{ url_for("authenticate") }}' class="form-signin">
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <ul class=flashes>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-    {% endwith %}
-    
-	<h2 class="form-signin-heading">Login</h2>
-	<label for="email">Email</label>
-	<input type="text" class="input-block-level" placeholder="Email address" name="email"></input>
-	<label for="password">Password</label>
-	<input type="password" class="input-block-level" name="password"></input><br />
-	<input type="submit" class="btn btn-large btn-primary" value="sign up">
+<form method="POST" action="/login" name="login_form" class="form-signin">
+
+<h3 class="form-signin-heading">Login</h3>
+  
+  {{form.hidden_tag()}}
+
+  <label for="email">Email</label>
+  {{form.email(size = 30)}}
+  {% for error in form.errors.email %}
+  <span style = "color: red;">[{{error}}]</span>
+  {% endfor %}
+
+  <label for="password">Password</label>
+  {{form.password(size = 30)}}
+  {% for error in form.errors.password %}
+  <span style = "color: red;">[{{error}}]</span>
+  {% endfor %}
+
+   <input type="submit" class="btn btn-large btn-primary" value="Login">
 </form>
+	
 {% endblock %}

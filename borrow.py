@@ -1,12 +1,24 @@
 import datetime
-from flask import Flask, flash, render_template, redirect, request, url_for, escape, session
+from flask import Flask, flash, render_template, redirect, request, url_for, escape, session, g
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 import model
-from forms import BorrowForm, SignUpForm
+from forms import BorrowForm, SignUpForm, LoginForm
 from flask.ext.login import login_user, logout_user, login_required
 from flask.ext.login import LoginManager, current_user
 
 app = Flask(__name__)
+
+# Set up Flask-Login
+login_manager = LoginManager()
+login_manager.setup_app(app)
+
+# Redirect non-loggedin users to login screen
+login_manager.login_view = "login"
+
+# Reload the user object from the user ID stored in the session. 
+@login_manager.user_loader
+def load_user(user_id):
+  return model.User.query.get(int(user_id))
 
 @app.route("/")
 def index():
@@ -15,15 +27,31 @@ def index():
 	library = model.session.query(model.Library).filter_by(user_id=1)
 	return render_template("user_list.html", users=user_list, library=library, user_id=user_id)
 
-
 # User sign up
 def sign_up():
 	pass
 
 # login as a user 	
-@app.route("/login")
+@app.route("/login", methods=["GET","POST"])
+@app.route("/login", methods = ["GET", "POST"])
 def login():
-	return render_template("login.html")
+  # update the last_login and number of logins everytime that the user logs into the db
+  # dont allow user to re-login after they've done so
+  form = LoginForm()
+  if form.validate_on_submit():
+    user = model.session.query(model.User).filter(model.User.email == form.email.data).first()
+    user_password = user.password
+   
+    if user is not None:
+      login_user(user)
+      
+      flash("logged in successfully")
+      return redirect(url_for("index"))
+    else:
+      flash("Incorrect Password")
+      return redirect("login")
+    # if current_user.id
+  return render_template("login.html", form=form)
 
 # Logout user
 @app.route("/logout")
@@ -31,22 +59,6 @@ def logout():
 	# remove the username from the session if it's there
     session.pop('user_id', None)
     return redirect(url_for('index'))
-
-#authenticate user
-@app.route("/authenticate", methods=["POST"])
-def authenticate():
-	email = request.form['email']
-	password = request.form['password']
-	# capture the userid information from model-database
-	user_query = model.session.query(model.User).filter_by(email=email,password=password)
-	if user_query.first():
-		user = user_query.first()
-		# after getting the session variable back, you have to point it to a page
-		session['user_id'] = user.id
-		return redirect("/")
-	else:
-		flash("Incorrect Email/Password Combo. Please try again.")
-		return redirect("/login")
 
 #signup form
 @app.route('/sign_up', methods = ["POST","GET"])
@@ -86,15 +98,11 @@ def user_library():
 def borrow(product_id, lender_id):
 	user_id = session.get("user_id", None)
 	form = BorrowForm(product_id=product_id, lender_id=lender_id, user_id=user_id)
-# @app.route("/borrow_request", methods=['GET','POST'])
-# def borrow_request():
-# 	form = BorrowForm()
-	# if request.method == 'POST' and form.validate():
-	# 	borrow
+
 	if form.validate_on_submit():
-		borrower_id = 1
-		lender_id = 2
-		product_id = form.product_id.data
+		borrower_id = user_id
+		lender_id = lender_id
+		product_id = product_id
 		date_wanted = datetime.datetime.strptime(form.start_date.data, "%d-%b-%Y")
 		date_returned_est = datetime.datetime.strptime(form.end_date.data, "%d-%b-%Y")
 

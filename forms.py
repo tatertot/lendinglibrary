@@ -3,16 +3,17 @@ from flask.ext.wtf import Required
 from wtforms import validators as v
 from wtforms.ext import dateutil
 
-class BorrowForm(Form):
-	user_id = HiddenField('borrower_id')
-	lender_id = HiddenField('lender_id')
-	product_id = HiddenField('product_id')
-	start_date= TextField('start_date', validators = [Required()])
-	end_date = TextField('end_date')
+
+class LoginForm(Form):
+  email = TextField('email', validators = [Required()])
+  password = PasswordField('password', validators = [Required()])
+  # remember_me = BooleanField('remember_me', default = False)
+
 
 class SignUpForm(Form):
   	fname = TextField('fname', validators = [Required()])
   	lname = TextField('lname', validators = [Required()])
+  	mobile_number = TextField('mobile_number')
   	email = TextField('email',validators = [Required(),
                     v.Email(),
                     v.EqualTo('confirm_email',
@@ -23,3 +24,11 @@ class SignUpForm(Form):
                     v.EqualTo('confirm_password',
                     message = 'Passwords must match')])
   	confirm_password = PasswordField('Repeat Password')
+
+
+class BorrowForm(Form):
+	user_id = HiddenField('borrower_id')
+	lender_id = HiddenField('lender_id')
+	product_id = HiddenField('product_id')
+	start_date= TextField('start_date', validators = [Required()])
+	end_date = TextField('end_date', validators = [Required()])

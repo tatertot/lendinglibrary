@@ -30,6 +30,18 @@ class User(Base):
     state = Column(String(15), nullable  = True)
     zipcode = Column(String(15),nullable=True)
 
+    def is_authenticated(self):
+        return True
+
+    def is_active(self):
+        return True
+
+    def is_anonymous(self):
+        return False
+
+    def get_id(self):
+        return unicode(self.id)
+
 class Category(Base):
 
 	__tablename__ = "categories"

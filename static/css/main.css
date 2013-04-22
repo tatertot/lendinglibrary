@@ -31,3 +31,8 @@ body {
 .container {
   margin:0 20px;
 }
+
+.error {
+  color:#cc0000;
+  display:block;
+}
