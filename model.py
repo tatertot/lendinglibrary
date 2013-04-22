@@ -97,6 +97,11 @@ class History(Base):
 	date_returned_est = Column(DateTime(), nullable  = True)
 	date_returned = Column(DateTime(), nullable  = True)
 	declined = Column(Boolean(), default=False)
+
+	lender = relationship("User", primaryjoin="History.lender_id==User.id")
+	borrower = relationship("User", primaryjoin="History.borrower_id==User.id")
+	product = relationship("Product", backref=backref("histories", order_by=id))
+
 #lender is you, date wanted is in the future, declined is false, date borrowed is empty
 
 class Comment(Base):

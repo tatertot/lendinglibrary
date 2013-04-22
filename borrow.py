@@ -150,9 +150,10 @@ def check_in_product():
 
 @app.route("/notifications/<int:user_id>")
 def request_notifications(user_id):
-	notifications = model.session.query(model.History).filter_by(lender_id=user_id)
+	notifications = model.session.query(model.History).filter_by(lender_id=user_id).all()
+	users = model.session.query(model.User).all()
 	library = model.session.query(model.Library).filter_by(user_id=user_id)
-	return render_template("notifications.html", notifications=notifications, library=library, user_id=user_id)
+	return render_template("notifications.html", notifications=notifications, library=library, user_id=user_id, users=users)
 
 CSRF_ENABLED = True
 # set the secret key.  keep this really secret:
