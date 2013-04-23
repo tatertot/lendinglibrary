@@ -27,9 +27,6 @@ def index():
 	library = model.session.query(model.Library).filter_by(user_id=1)
 	return render_template("user_list.html", users=user_list, library=library, user_id=user_id)
 
-# User sign up
-def sign_up():
-	pass
 
 # login as a user 	
 @app.route("/login", methods=["GET","POST"])
@@ -54,14 +51,15 @@ def login():
 
 # Logout user
 @app.route("/logout")
+@login_required
 def logout():
-	# remove the username from the session if it's there
-    session.pop('user_id', None)
-    return redirect(url_for('index'))
+  logout_user()
+  flash("You are now logged out")
+  return redirect(url_for("index"))
 
 #signup form
 @app.route('/sign_up', methods = ["POST","GET"])
-def form():
+def sign_up():
   form = SignUpForm()
   if form.validate_on_submit():
     user = model.session.query(model.User).filter(model.User.email == form.email.data).first()
@@ -140,6 +138,13 @@ def add_product():
 def remove_product():
 	pass
 
+@app.route("/accept_request/<int:history_id>/<int:user_id>", methods=["POST","GET"])
+def accept_request(history_id,user_id):
+	request = model.History.query.get(history_id)
+	request.date_borrowed = datetime.datetime.now()
+	model.session.commit()
+	return redirect(url_for('request_notifications', user_id=user_id))
+
 # return_product
 def return_product():
 	pass
@@ -150,10 +155,11 @@ def check_in_product():
 
 @app.route("/notifications/<int:user_id>")
 def request_notifications(user_id):
-	notifications = model.session.query(model.History).filter_by(lender_id=user_id).all()
-	users = model.session.query(model.User).all()
-	library = model.session.query(model.Library).filter_by(user_id=user_id)
-	return render_template("notifications.html", notifications=notifications, library=library, user_id=user_id, users=users)
+	notifications = model.session.query(model.History).filter_by(lender_id=user_id, date_borrowed=None).all()
+	#Syntax uses filter over filter_by because of comparison operators
+	checked_out = model.session.query(model.History).filter(model.History.lender_id==user_id, model.History.date_borrowed >= 0)
+
+	return render_template("notifications.html", notifications=notifications, checked_out=checked_out, user_id=user_id)
 
 CSRF_ENABLED = True
 # set the secret key.  keep this really secret:

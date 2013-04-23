@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<form method="POST" action="/sign_up" name ="signup_page">
+<form method="POST" action="/sign_up" name="signup_page" class="form-signin">
   <h2 class="form-signin-heading">Sign Up</h2>
 
   {{form.hidden_tag()}}
@@ -48,6 +48,6 @@
   <span style = "color: red;">[{{error}}]</span>
   {% endfor %}
 
-<p><input type = "submit" value = "Sign Up"></input></p>
+<p><input type="submit" value="Sign Up" class="btn btn-large btn-primary"></input></p>
 </form>
 {% endblock %}

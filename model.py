@@ -82,7 +82,7 @@ class Library(Base):
 # 	subscriber = Column(Integer(8), ForeignKey('users.id'), nullable = False)
 # 	relationship_type = Column(String(64), nullable  = True)
 
-class History(Base):
+class History(Base):#change table to Request?
 
 	__tablename__ = "histories"
 
@@ -101,6 +101,8 @@ class History(Base):
 	lender = relationship("User", primaryjoin="History.lender_id==User.id")
 	borrower = relationship("User", primaryjoin="History.borrower_id==User.id")
 	product = relationship("Product", backref=backref("histories", order_by=id))
+
+
 
 #lender is you, date wanted is in the future, declined is false, date borrowed is empty
 

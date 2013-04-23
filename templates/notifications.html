@@ -1,20 +1,59 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<h1>User Request Notifications</h1>
+<div class="row">
 
-{% for notification in notifications %}
+	<div class="span8">
 
-<p>
-product_id: {{ notification.product_id}} <br />
-product name: {{ notification.product.name}} <br />
 
-lender id: {{ notification.lender_id}} <br />
-borrower name: {{ notification.borrower.fname}} <br />
-date wanted: {{ notification.date_wanted}} <br />
-planned return: {{ notification.date_returned_est}} <br />
-<a href="">Accept Request</a>
-</p>
-{% endfor %}
 
-{% endblock %}
+	</div>
+
+	<div class="span4">
+
+		<h3>User Request Notifications</h3>
+		<p>Pending Requests:</p>
+
+		{% for notification in notifications %}
+
+		<div style="border:1px solid red;margin-bottom:20px;padding:10px">
+			<ul>
+				<li>product_id: {{ notification.product_id}}</li>
+				<li>product name: {{ notification.product.name}}</li>
+				<li>lender id: {{ notification.lender_id}}</li>
+				<li>borrower name: {{ notification.borrower.fname}}</li>
+				<li>date wanted: {{ notification.date_wanted}}</li>
+				<li>planned return: {{ notification.date_returned_est}}</li>
+				<li>date borrowed: {{ notification.date_borrowed}}</li>
+			</ul>
+			<a href="{{ url_for('accept_request', history_id=notification.id, user_id=user_id) }}">Accept Request</a>
+		</div>
+		{% endfor %}
+
+
+		<p>Items Checked Out</p>
+
+		{% for item in checked_out %}
+
+		<div style="border:1px solid blue;margin-bottom:20px;padding:10px">
+			<ul>
+				<li>product_id: {{ item.product_id}}</li>
+				<li>product name: {{ item.product.name}}</li>
+				<li>lender id: {{ item.lender_id}}</li>
+				<li>borrower name: {{ item.borrower.fname}}</li>
+				<li>date wanted: {{ item.date_wanted}}</li>
+				<li>planned return: {{ item.date_returned_est}}</li>
+				<li>date borrowed: {{ item.date_borrowed}}</li>
+			</ul>
+			<a href="{{ url_for('accept_request', history_id=item.id, user_id=user_id) }}">Check In Item</a>
+		</div>
+		{% endfor %}
+
+
+		{% endblock %}
+
+	</div>
+</div>
+
+
+
