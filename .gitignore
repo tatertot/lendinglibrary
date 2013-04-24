@@ -16,7 +16,9 @@ develop-eggs
 env
 # Installer logs
 pip-log.txt
+
 notes.txt
+library.db
 
 # Unit test / coverage reports
 .coverage

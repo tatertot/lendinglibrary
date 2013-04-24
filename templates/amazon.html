@@ -1,0 +1,16 @@
+{% extends "layout.html" %}
+{% block body %}
+
+	<h3>Aw, no one seems to have one to lend you. Need to buy it?</h3>
+  {% for product in products %}
+  	 <div style="background-color:#fff;padding:10px;width:150px;height:200px;overflow:hidden;float:left;display:block;margin:10px">
+     <p>
+        <a href="{{product.DetailPageURL}}">{{product.ItemAttributes.Title}}<br />
+        	<img src =' {{ product.MediumImage.URL }}' /><br />
+        	<span style="font-size:9px">ASIN: {{product.ASIN}}</span>
+     </p>
+ 	</div>
+  {% endfor %}
+
+	
+{% endblock %}
