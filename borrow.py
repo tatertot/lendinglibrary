@@ -192,7 +192,21 @@ def amazon():
 
     api = API(AWS_KEY, SECRET_KEY, 'us', ASSOC_TAG)
 
-    root = api.similarity_lookup('B0058U6DQC', ResponseGroup='Large')
+    similar_root = api.similarity_lookup('B0058U6DQC', ResponseGroup='Large')
+
+    product_root = api.item_lookup('B0058U6DQC', ResponseGroup='Large')
+    #~ from lxml import etree
+    #~ print etree.tostring(root, pretty_print=True)
+
+    nspace = similar_root.nsmap.get(None, '')
+    similar_products = similar_root.xpath('//aws:Items/aws:Item', 
+                         namespaces={'aws' : nspace})
+
+    more_products = product_root.xpath('//aws:Items/aws:Item', 
+                         namespaces={'aws' : nspace})
+
+    return render_template("amazon.html", similar_products=similar_products, more_products = more_products)
+
 
     #~ from lxml import etree
     #~ print etree.tostring(root, pretty_print=True)

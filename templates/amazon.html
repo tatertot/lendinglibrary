@@ -2,12 +2,24 @@
 {% block body %}
 
 	<h3>Aw, no one seems to have one to lend you. Need to buy it?</h3>
-  {% for product in products %}
-  	 <div style="background-color:#fff;padding:10px;width:150px;height:200px;overflow:hidden;float:left;display:block;margin:10px">
+
+    {% for product in more_products %}
+     <div style="background-color:#fff;padding:10px;width:150px;height:220px;overflow:hidden;display:block;margin:10px;clear:both;" class="clearfix">
+     <p>
+        <a href="{{product.DetailPageURL}}">{{product.ItemAttributes.Title}}<br />
+          <img src =' {{ product.MediumImage.URL }}' /><br />
+          <span style="font-size:9px">ASIN: {{product.ASIN}}</span></a>
+     </p>
+  </div>
+ {% endfor %}
+
+  <h3 class="clearfix">How about some gear to go with that?</h3>
+  {% for product in similar_products %}
+  	 <div style="background-color:#fff;padding:10px;width:150px;height:220px;overflow:hidden;float:left;display:block;margin:10px">
      <p>
         <a href="{{product.DetailPageURL}}">{{product.ItemAttributes.Title}}<br />
         	<img src =' {{ product.MediumImage.URL }}' /><br />
-        	<span style="font-size:9px">ASIN: {{product.ASIN}}</span>
+        	<span style="font-size:9px">ASIN: {{product.ASIN}}</span></a>
      </p>
  	</div>
   {% endfor %}
