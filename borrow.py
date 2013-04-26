@@ -9,6 +9,7 @@ from amazonproduct.api import API
 from lxml import etree
 from lxml import objectify
 import bottlenose
+from amazon.api import AmazonAPI
 
 app = Flask(__name__)
 
@@ -91,10 +92,22 @@ def sign_up():
 
 
 
+@app.route("/dashboard")
+def dashboard():
+    user_list = model.session.query(model.User).all()
+    library = model.session.query(model.Library).filter_by(user_id=current_user.id)
+    notifications = request_notifications()
+
+    return render_template("user_library.html", users=user_list, library=library, user_id=current_user.id, notifications=notifications)
 # user's lending library
 # click on username and view list of producsts in their library
+
+@app.route("/user_library")
 def user_library():
-    pass
+
+    user_list = model.session.query(model.User).all()
+    library = model.session.query(model.Library).filter_by(user_id=current_user.id)
+    return render_template(users=user_list, library=library)
 
 
 # create borrow request
@@ -169,13 +182,13 @@ def check_in_product():
     pass
 
 
-@app.route("/notifications/<int:user_id>")
-def request_notifications(user_id):
-    notifications = model.session.query(model.History).filter_by(lender_id=user_id, date_borrowed=None).all()
+@app.route("/notifications")
+def request_notifications():
+    notifications = model.session.query(model.History).filter_by(lender_id=current_user.id, date_borrowed=None).all()
     #Syntax uses filter over filter_by because of comparison operators
-    checked_out = model.session.query(model.History).filter(model.History.lender_id==user_id, model.History.date_borrowed >= 0)
+    checked_out = model.session.query(model.History).filter(model.History.lender_id==current_user.id, model.History.date_borrowed >= 0)
 
-    return render_template("notifications.html", notifications=notifications, checked_out=checked_out, user_id=user_id)
+    return render_template("notifications.html", notifications=notifications, checked_out=checked_out, user_id=current_user.id)
 
 
 CSRF_ENABLED = True
@@ -208,14 +221,6 @@ def amazon():
     return render_template("amazon.html", similar_products=similar_products, more_products = more_products)
 
 
-    #~ from lxml import etree
-    #~ print etree.tostring(root, pretty_print=True)
-
-    nspace = root.nsmap.get(None, '')
-    products = root.xpath('//aws:Items/aws:Item', 
-                         namespaces={'aws' : nspace})
-
-    return render_template("amazon.html", products=products)
 
 @app.route("/amazon_bottlenose")
 def amazon_bottlenose():
@@ -224,6 +229,37 @@ def amazon_bottlenose():
     response = objectify.fromstring(root)
 
     return render_template("amazon_bottlenose.html", response=response)
+
+@app.route("/amazon_bottlenose2")
+def amazon_bottlenose2():
+    amazon = AmazonAPI(AWS_KEY, SECRET_KEY, ASSOC_TAG)
+    products = amazon.search(Keywords='boston terrier', SearchIndex='All')
+    return render_template("amazon_bottlenose2.html", products = products)
+
+
+
+@app.route("/amazon_search")
+def amazon_search():
+    api = API(AWS_KEY, SECRET_KEY, 'us', ASSOC_TAG)
+    result = api.item_search('All',
+        ResponseGroup='Large', AssociateTag='boitba-20', Keywords='tent', ItemPage=2)
+
+    total_results = result.results
+
+#item_search returns pages not items
+
+    # extract paging information
+    #total_results = result.results
+    #Stotal_pages = len(result)  # or result.pages
+
+    #~ from lxml import etree
+    #~ print etree.tostring(root, pretty_print=True)
+  
+
+    return render_template("amazon_search.html", node = result, total_results=total_results)
+
+
+
 
 
 if __name__ == "__main__":

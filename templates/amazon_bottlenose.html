@@ -4,7 +4,9 @@
 	<h3>Aw, no one seems to have one to lend you. Need to buy it?</h3>
   {% for product in response.Items %}
   	{{ response.length }}
-  	Product IMAGE: <img src='{{ product.Item.SmallImage.URL}}' />
+  	Product IMAGE:<br />
+  	<img src='{{ product.Item.MediumImage.URL}}' /><br />
+  	link: {{ product.Item.URL }}
   {% endfor %}
 
 	

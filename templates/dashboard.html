@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="row">
+
+	<div class="span9">
+
+		{% block main_content %} {% endblock %} 
+
+	</div>
+
+	<div class="span3">
+
+		{{ notifications|safe }}
+	
+	</div>
+</div>
+
+{% endblock %} 
+
