@@ -1,0 +1,20 @@
+{% extends "dashboard.html" %}
+{% block main_content %}
+
+	
+<form method="POST" action="/search" name="search_form" class="form-signin">
+
+<h3 class="form-signin-heading">Search</h3>
+  
+  {{form.hidden_tag()}}
+
+  <label for="query">Search</label>
+  {{form.query(size = 30)}}
+  {% for error in form.errors.query %}
+  <span style = "color: red;">[{{error}}]</span>
+  {% endfor %}
+
+   <input type="submit" class="btn btn-large btn-primary" value="Search">
+</form>
+
+{% endblock %}
