@@ -5,6 +5,16 @@
 	
     {% for result in results %}
         {{ result.product_desc}}<br />
+
+    <div style="background-color:#fff;padding:10px;width:150px;height:250px;overflow:hidden;float:left;display:block;margin:10px;" class="clearfix">
+		<p>
+			<img src='{{ result.product.default_photo }}' /><br />
+			{{ result.product_desc }}<br /> 
+			Owner: {{ result.user.fname }}<br />
+			<a href='{{ url_for("borrow", product_id=result.product.id, lender_id=result.user_id ) }}' class="btn btn-info">Borrow</a>
+		</p>
+	</div>
+
     {% endfor %}
 
 

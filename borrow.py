@@ -2,7 +2,7 @@ import datetime
 from flask import Flask, flash, render_template, redirect, request, url_for, escape, session, g
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 import model
-from forms import BorrowForm, SignUpForm, LoginForm
+from forms import BorrowForm, SignUpForm, LoginForm, SearchForm
 from flask.ext.login import login_user, logout_user, login_required
 from flask.ext.login import LoginManager, current_user
 from amazonproduct.api import API 
@@ -91,14 +91,30 @@ def sign_up():
   return render_template("sign_up.html", title="Sign Up Form", form=form)
 
 
+@app.route("/search", methods = ["POST","GET"])
+def search():
+    form = SearchForm()
+    if form.validate_on_submit():
+      query = form.query.data
+      results = model.session.query(model.Library).filter(model.Library.product_desc.like('%'+ query + '%'))
+      #redirect to new page with search results
+      return render_template('results.html', results=results)
+
+    else:
+      flash("Invalid Search")
+
+    return render_template("search.html", form=form)
+
+
 
 @app.route("/dashboard")
 def dashboard():
     user_list = model.session.query(model.User).all()
     library = model.session.query(model.Library).filter_by(user_id=current_user.id)
     notifications = request_notifications()
+    search_bar = search()
 
-    return render_template("user_library.html", users=user_list, library=library, user_id=current_user.id, notifications=notifications)
+    return render_template("user_library.html", users=user_list, library=library, user_id=current_user.id, notifications=notifications, search=search_bar)
 # user's lending library
 # click on username and view list of producsts in their library
 
@@ -242,7 +258,7 @@ def amazon_bottlenose2():
 def amazon_search():
     api = API(AWS_KEY, SECRET_KEY, 'us', ASSOC_TAG)
     result = api.item_search('All',
-        ResponseGroup='Large', AssociateTag='boitba-20', Keywords='tent', ItemPage=2)
+        ResponseGroup='Large', AssociateTag='boitba-20', Keywords='tent marmot', ItemPage=2)
 
     total_results = result.results
 
@@ -257,8 +273,6 @@ def amazon_search():
   
 
     return render_template("amazon_search.html", node = result, total_results=total_results)
-
-
 
 
 

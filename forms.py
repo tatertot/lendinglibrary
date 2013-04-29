@@ -32,3 +32,6 @@ class BorrowForm(Form):
 	product_id = HiddenField('product_id')
 	start_date= TextField('start_date', validators = [Required()])
 	end_date = TextField('end_date', validators = [Required()])
+
+class SearchForm(Form):
+  query = TextField('query', validators = [Required()])

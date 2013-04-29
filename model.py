@@ -6,6 +6,7 @@ from sqlalchemy.orm import sessionmaker, scoped_session, relationship, backref
 from sqlalchemy import ForeignKey
 from flask.ext.wtf import Form, TextField, BooleanField, HiddenField, DateTimeField
 from flask.ext.wtf import Required
+import flask.ext.whooshalchemy as whooshalchemy
 
 
 #This is SQLAlchemy's way of interacting with the db, creating a session

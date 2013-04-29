@@ -29,7 +29,7 @@
 		<p>
 			<img src='{{ product.product.default_photo }}' /><br />
 			{{ product.product_desc }}<br /> 
-			<a href='{{ url_for("borrow", product_id=product.id, lender_id=user.id ) }}' class="btn btn-info">Borrow</a>
+			<a href='{{ url_for("borrow", product_id=product.id, lender_id=user.id ) }}' class="btn btn-small btn-primary">Borrow</a>
 		</p>
 	</div>
 	{% endfor %}

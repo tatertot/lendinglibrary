@@ -6,3 +6,5 @@ SECRET_KEY = 'you-will-never-guess'
     
 SQLALCHEMY_DATABASE_URI = 'sqlite:///library.db')
 SQLALCHEMY_MIGRATE_REPO = os.path.join(basedir, 'db_repository')
+
+WHOOSH_BASE = os.path.join(basedir, 'search.db')

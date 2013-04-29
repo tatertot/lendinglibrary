@@ -1,20 +1,13 @@
-{% extends "dashboard.html" %}
-{% block main_content %}
-
-	
-<form method="POST" action="/search" name="search_form" class="form-signin">
-
-<h3 class="form-signin-heading">Search</h3>
+<form method="POST" action="/search" name="search_form" class="form-search">
   
   {{form.hidden_tag()}}
 
-  <label for="query">Search</label>
-  {{form.query(size = 30)}}
-  {% for error in form.errors.query %}
-  <span style = "color: red;">[{{error}}]</span>
-  {% endfor %}
-
-   <input type="submit" class="btn btn-large btn-primary" value="Search">
+  <h3>Need to borrow something?</strong></h3>
+    <div class="input-append">
+      {{form.query(size = 40, class="search-query", placeholder="Search Lending Libraries")}}
+      {% for error in form.errors.query %}
+      <span style = "color: red;">[{{error}}]</span>
+      {% endfor %}
+       <button type="submit" class="btn">Search</button>
+    </div>
 </form>
-
-{% endblock %}

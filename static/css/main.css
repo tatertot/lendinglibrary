@@ -1,7 +1,7 @@
 body {
   padding-top: 40px;
   padding-bottom: 40px;
-  background-color: #f5f5f5;
+  background:url('/static/img/gray_bg.jpg') repeat top left;
 }
 
 .form-signin {
@@ -31,8 +31,40 @@ body {
 .container {
   margin:0 auto;
 }
+.wrapper {
+  background-color:#eee;
+  padding:0 20px;
+  box-shadow:0 0 10px rgba(0, 0, 0, 0.13);
+}
+.container.wrapper {
 
+}
+.sidebar {
+  margin:20px 0;
+}
 .error {
   color:#cc0000;
   display:block;
 }
+
+.block.sidebar {
+  border:1px solid #999;
+  border-radius: 5px 5px 0 0;
+  background-color:#fff;
+}
+.block.sidebar .header p{
+    padding:10px;
+    background-color: #0088CC;
+}
+
+.block.sidebar p.heading {
+  font-size:18px;
+  font-weight:bold;
+  color:#fff;
+}
+
+.sidebar .alert {
+    margin:10px;
+}
+
+
