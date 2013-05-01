@@ -25,7 +25,7 @@
 
 	{% for item in checked_out %}
 
-		<div class="alert clearfix {% if item.date_returned_est.strftime('%x') < current_date.strftime('%x')  %}overdue{% endif %}">
+		<div class="alert clearfix">
 			<p>
 				<strong>{{ item.borrower.fname }} has your {{ item.product.name}}</strong><br />
 				Borrowed: 
@@ -38,6 +38,7 @@
 						{{ item.date_returned_est.strftime('%x') }} 
 						{% if item.date_returned_est.strftime('%x') < current_date.strftime('%x')  %}
 						<span class="badge badge-important">Overdue</span> 
+						<a href="">Send SMS</a>
 						{% endif %}<br />
 					{% endif %}
 

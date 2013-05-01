@@ -26,7 +26,7 @@
 	<div class="clearfix">
 	
 	{% for product in user.libraries %}
-	<div style="background-color:#fff;padding:10px;width:150px;height:250px;overflow:hidden;float:left;display:block;margin:10px;box-shadow:0 0 5px #DDDDDD" class="clearfix">
+	<div style="background-color:#fff;padding:10px;width:150px;height:250px;overflow:hidden;float:left;display:block;margin:10px;box-shadow:0 0 2px #DDDDDD;border:1px solid #ccc" class="clearfix">
 		<p>
 			<img src='{{ product.product.default_photo }}' /><br />
 			{{ product.product_desc }}<br /> 

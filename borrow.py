@@ -33,8 +33,7 @@ def index():
     user_id = session.get("user_id", None)
     user_list = model.session.query(model.User).all()
     library = model.session.query(model.Library).filter_by(user_id=1)
-    return render_template("user_list.html", users=user_list, library=library, user_id=user_id)
-
+    return render_template("index.html", users=user_list, library=library, user_id=user_id)
 
 # login as a user   
 @app.route("/login", methods=["GET","POST"])
@@ -99,10 +98,14 @@ def search():
     form = SearchForm()
     if form.validate_on_submit():
       query = form.query.data
-      results = model.session.query(model.Library).filter(model.Library.product_desc.like('%'+ query + '%'))
-      #redirect to new page with search results
-      return render_template('results.html', results=results)
-
+      results = model.session.query(model.Library).filter(model.Library.product_desc.like('%'+ query + '%')).all()
+      print "These are the results:",results
+      if not results:
+        #redirect to new page with amazon search results
+        return redirect(url_for('amazon_bottlenose2', query=query))
+      else:
+        #render page with search results
+        return render_template('results.html', results=results)
     else:
       flash("Invalid Search")
 
@@ -111,6 +114,7 @@ def search():
 
 
 @app.route("/dashboard")
+@login_required
 def dashboard():
     user_list = model.session.query(model.User).all()
     library = model.session.query(model.Library).filter_by(user_id=current_user.id)
@@ -243,14 +247,16 @@ AWS_KEY = 'AKIAJQRVR67YSEDVVGJQ'
 SECRET_KEY = '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'
 ASSOC_TAG = 'boitba-20'
 
-@app.route("/amazon")
-def amazon():
+@app.route("/amazon/<query>")
+def amazon(query):
 
     api = API(AWS_KEY, SECRET_KEY, 'us', ASSOC_TAG)
 
     similar_root = api.similarity_lookup('B0058U6DQC', ResponseGroup='Large')
 
-    product_root = api.item_lookup('B0058U6DQC', ResponseGroup='Large')
+    #product_root = api.item_lookup('B0058U6DQC', ResponseGroup='Large')
+    #product_root =  api.item_search(title='unicorn', ResponseGroup='Large')
+    more_products = api.item_search('Books', Publisher='Galileo Press')
     #~ from lxml import etree
     #~ print etree.tostring(root, pretty_print=True)
 
@@ -258,10 +264,10 @@ def amazon():
     similar_products = similar_root.xpath('//aws:Items/aws:Item', 
                          namespaces={'aws' : nspace})
 
-    more_products = product_root.xpath('//aws:Items/aws:Item', 
-                         namespaces={'aws' : nspace})
+    # more_products = product_root.xpath('//aws:Items/aws:Item', 
+    #                      namespaces={'aws' : nspace})
 
-    return render_template("amazon.html", similar_products=similar_products, more_products = more_products)
+    return render_template("amazon.html", similar_products=similar_products, more_products = more_products, query=query)
 
 
 
@@ -273,10 +279,10 @@ def amazon_bottlenose():
 
     return render_template("amazon_bottlenose.html", response=response)
 
-@app.route("/amazon_bottlenose2")
-def amazon_bottlenose2():
+@app.route("/amazon_bottlenose2/<query>")
+def amazon_bottlenose2(query):
     amazon = AmazonAPI(AWS_KEY, SECRET_KEY, ASSOC_TAG)
-    products = amazon.search(Keywords='boston terrier', SearchIndex='All')
+    products = amazon.search(Keywords=query, SearchIndex='All')
     return render_template("amazon_bottlenose2.html", products = products)
 
 
@@ -306,7 +312,7 @@ def send_sms():
     # Twilio AccountSid and AuthToken.
     # Twilio Number - 4156716511
     account_sid = 'AC23889a8a2f2d7e92e141f10b1265a53e'
-    auth_token = ''
+    auth_token = 'a8c49ea47fa7a0cbbcc481f696833f8f'
     client = TwilioRestClient(account_sid, auth_token)
     
     message = client.sms.messages.create(to="+14153122776", from_="+14156716511",
