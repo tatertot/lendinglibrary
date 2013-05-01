@@ -1,6 +1,3 @@
-
-<p>Pending Requests:</p>
-
 <div class="block sidebar">
 	<div class="header">
 		<p class="heading">Notifications</p>
@@ -10,7 +7,8 @@
 		<div class="alert clearfix">
 			<p>
 				<strong>{{ notification.borrower.fname}} wants to borrow your {{ notification.product.name}}</strong><br />
-				dates: {{ notification.date_borrowed}} - {{ notification.date_returned_est}}
+				dates: {% if notification.date_wanted is not none %} {{ notification.date_wanted.strftime('%x') }} - {% endif %}   {% if notification.date_returned_est is not none %}{{ notification.date_returned_est.strftime('%x') }}{% endif %}<br />
+				Return Rate: 100%
 			</p>
 				<a href="{{ url_for('accept_request', history_id=notification.id, user_id=user_id) }}" class="btn btn-mini btn-info">Accept Request</a>
 			
@@ -26,13 +24,25 @@
 	</div>
 
 	{% for item in checked_out %}
-		<div class="alert clearfix">
+
+		<div class="alert clearfix {% if item.date_returned_est.strftime('%x') < current_date.strftime('%x')  %}overdue{% endif %}">
 			<p>
 				<strong>{{ item.borrower.fname }} has your {{ item.product.name}}</strong><br />
-				borrowed: {{ item.date_borrowed }}<br />
-				returning on: {{ item.date_returned_est }}
+				Borrowed: 
+					{% if item.date_borrowed is not none %} 
+						{{ item.date_borrowed.strftime('%x') }} 
+					{% endif %}<br />
+
+				Returning on: 
+					{% if item.date_returned_est is not none %} 
+						{{ item.date_returned_est.strftime('%x') }} 
+						{% if item.date_returned_est.strftime('%x') < current_date.strftime('%x')  %}
+						<span class="badge badge-important">Overdue</span> 
+						{% endif %}<br />
+					{% endif %}
+
 			</p>
-				<a href="{{ url_for('accept_request', history_id=item.id, user_id=user_id) }}">Check In Item</a>
+				<a href="{{ url_for('checkin_item', history_id=item.id, user_id=user_id) }}" class="btn btn-mini btn-success">Check-In Item</a>
 			
 		</div>
 	

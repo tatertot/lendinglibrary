@@ -3,7 +3,9 @@ body {
   padding-bottom: 40px;
   background:url('/static/img/gray_bg.jpg') repeat top left;
 }
-
+/*.nav, p {
+  font-family: Oldenburg, georgia, sans-serif
+}*/
 .form-signin {
   max-width: 300px;
   padding: 19px 29px 29px;
@@ -32,7 +34,7 @@ body {
   margin:0 auto;
 }
 .wrapper {
-  background-color:#eee;
+  background-color:#efefef;
   padding:0 20px;
   box-shadow:0 0 10px rgba(0, 0, 0, 0.13);
 }
@@ -48,17 +50,17 @@ body {
 }
 
 .block.sidebar {
-  border:1px solid #999;
+  border:1px solid #ccc;
   border-radius: 5px 5px 0 0;
   background-color:#fff;
 }
 .block.sidebar .header p{
-    padding:10px;
+    padding:5px 10px;
     background-color: #0088CC;
 }
 
 .block.sidebar p.heading {
-  font-size:18px;
+  font-size:14px;
   font-weight:bold;
   color:#fff;
 }
@@ -67,4 +69,7 @@ body {
     margin:10px;
 }
 
+.product_box {
+  box-shadow:0 0 5px #DDDDDD;
+}
 

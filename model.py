@@ -102,7 +102,7 @@ class History(Base):#change table to Request?
 	lender = relationship("User", primaryjoin="History.lender_id==User.id")
 	borrower = relationship("User", primaryjoin="History.borrower_id==User.id")
 	product = relationship("Product", backref=backref("histories", order_by=id))
-
+	# By using backref you can access the product table using product.histories
 
 
 #lender is you, date wanted is in the future, declined is false, date borrowed is empty

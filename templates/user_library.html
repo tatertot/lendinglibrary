@@ -24,15 +24,26 @@
 
 <h3>User {{ user.id }}: {{ user.fname }}, has {{ user.libraries|length }} products</h3>
 	<div class="clearfix">
+	
 	{% for product in user.libraries %}
-	<div style="background-color:#fff;padding:10px;width:150px;height:250px;overflow:hidden;float:left;display:block;margin:10px;" class="clearfix">
+	<div style="background-color:#fff;padding:10px;width:150px;height:250px;overflow:hidden;float:left;display:block;margin:10px;box-shadow:0 0 5px #DDDDDD" class="clearfix">
 		<p>
 			<img src='{{ product.product.default_photo }}' /><br />
 			{{ product.product_desc }}<br /> 
+			Status: 
+			{% if product.status == 1 %}
+			<span class="label label-success">Available Now</span>
+				{% else %}
+			<span class="label label-important">On Loan</span>
+			{% endif %}
+
+			<br />
 			<a href='{{ url_for("borrow", product_id=product.id, lender_id=user.id ) }}' class="btn btn-small btn-primary">Borrow</a>
 		</p>
 	</div>
 	{% endfor %}
+
+	
 	</div>
 {% endfor %}
 
