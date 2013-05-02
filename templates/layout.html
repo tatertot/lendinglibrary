@@ -10,13 +10,7 @@
         <link rel="stylesheet" href="/static/css/main.css" type="text/css">
 
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
-        <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-        <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
-        <script>
-        $(function() {
-          $(".datepicker" ).datepicker({dateFormat: 'd-M-yy'});
-        });
-        </script>
+
 </head>
 <body>
 
@@ -37,8 +31,7 @@
               <li><a href="/sign_up">Sign up</a></li>
               <li><a href="/login">Login</a></li>
               <li><a href="/logout">Logout</a></li>
-              <li><a href="/borrow">Borrow</a></li>
-              <li><a href="/lend">Lend</a></li>
+              <li><a href="/dashboard">Dashboard</a></li>
               <li><a href="/notifications/{{current_user.id}}">Notifications</a></li>
             </ul>
 
@@ -58,5 +51,24 @@
 
 
         </div>
+
+          <!-- Placed at the end of the document so the pages load faster -->
+          <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+          <script src="http://code.jquery.com/ui/1.10.2/jquery-ui.js"></script>
+          <script src="/static/js/bootstrap.js"></script>
+
+          <script>
+          $(function() {
+            $(".datepicker" ).datepicker({dateFormat: 'd-M-yy'});
+          });
+
+        </script>
+
+    <script type="text/javascript">
+        (function() {
+            $("[rel=popover]").popover();
+        })();
+    </script>
+
     </body>
 </html>

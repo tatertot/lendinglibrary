@@ -1,12 +1,15 @@
-{% extends "dashboard.html" %}
-{% block main_content %}
+{% extends "layout.html" %}
+{% block body %}
+
+<div class="row-fluid">
+
+  <div class="span12">
 
 	<h3>Maybe you can borrow one of these:</h3>
-	
+	<div>
     {% for result in results %}
-        {{ result.product_desc}}<br />
 
-    <div style="background-color:#fff;padding:10px;width:150px;height:250px;overflow:hidden;float:left;display:block;margin:10px;" class="clearfix">
+    <div style="background-color:#fff;padding:10px;width:150px;height:250px;overflow:hidden;float:left;display:block;margin:10px;border:1px solid #eee" class="clearfix;">
 		<p>
 			<img src='{{ result.product.default_photo }}' /><br />
 			{{ result.product_desc }}<br /> 
@@ -16,6 +19,24 @@
 	</div>
 
     {% endfor %}
+	</div>
 
+	<div style="clear:both">
+    {% if similar_products > 0 %}
+	    <h3 class="clearfix">How about some gear to go with that?</h3>
+		{% for product in similar_products %}
+			 <div style="background-color:#fff;padding:10px;width:150px;height:220px;overflow:hidden;float:left;display:block;margin:10px;border:1px solid #eee">
+			 <p>
+			    <a href="{{product.DetailPageURL}}">{{product.ItemAttributes.Title}}<br />
+			    	<img src =' {{ product.MediumImage.URL }}' /><br />
+			    	<span style="font-size:9px">ASIN: {{product.ASIN}}</span></a>
+			 </p>
+			</div>
+		{% endfor %}
+	{% endif %}
+	</div>
+
+</div>
+</div>
 
 {% endblock %}

@@ -75,6 +75,8 @@ class Library(Base):
 	user = relationship("User", backref=backref("libraries", order_by=id))
 	product = relationship("Product", backref=backref("libraries", order_by=id))
 
+	#ADD BORROWER ID AND CHANGE IT PER TRANSACTION
+
 # class Subscriber(Base):
 # 	__tablename__ = "subscribers"
 
@@ -98,10 +100,14 @@ class History(Base):#change table to Request?
 	date_returned_est = Column(DateTime(), nullable  = True)
 	date_returned = Column(DateTime(), nullable  = True)
 	declined = Column(Boolean(), default=False)
-
+	#returned = Column(Boolean(), default=False)
 	lender = relationship("User", primaryjoin="History.lender_id==User.id")
 	borrower = relationship("User", primaryjoin="History.borrower_id==User.id")
 	product = relationship("Product", backref=backref("histories", order_by=id))
+
+
+	#ADD STATUS HERE
+
 	# By using backref you can access the product table using product.histories
 
 

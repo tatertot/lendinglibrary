@@ -36,9 +36,11 @@
 				Returning on: 
 					{% if item.date_returned_est is not none %} 
 						{{ item.date_returned_est.strftime('%x') }} 
-						{% if item.date_returned_est.strftime('%x') < current_date.strftime('%x')  %}
+						{% if item.date_returned_est.strftime('%x') < current_date.strftime('%x')  %}<br />
 						<span class="badge badge-important">Overdue</span> 
-						<a href="">Send SMS</a>
+						<a href="/sms/{{ item.product_id}}/{{ item.borrower.id }}">Send SMS Reminder<a></br/>
+						<a href="#" data-toggle="tooltip" title="first tooltip">hover over me</a>
+						
 						{% endif %}<br />
 					{% endif %}
 
@@ -49,6 +51,9 @@
 	
 	
 	{% endfor %}
+
+	<div data-content="And here's some amazing content. It's very engaging. right?" rel="popover" class="btn danger"  data-original-title="A title" class="popup-marker">hover for popover</div>
+
 	</div>
 
 

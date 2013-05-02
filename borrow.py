@@ -99,13 +99,27 @@ def search():
     if form.validate_on_submit():
       query = form.query.data
       results = model.session.query(model.Library).filter(model.Library.product_desc.like('%'+ query + '%')).all()
+
       print "These are the results:",results
       if not results:
         #redirect to new page with amazon search results
         return redirect(url_for('amazon_bottlenose2', query=query))
       else:
+        for i in results:
+            similar_products = None
+            if i.product.asin:
+                asin = i.product.asin
+                api = API(AWS_KEY, SECRET_KEY, 'us', ASSOC_TAG)
+        
+            similar_root = api.similarity_lookup(asin, ResponseGroup='Large')
+            #~ from lxml import etree
+            #~ print etree.tostring(root, pretty_print=True)
+            nspace = similar_root.nsmap.get(None, '')
+            similar_products = similar_root.xpath('//aws:Items/aws:Item', 
+                             namespaces={'aws' : nspace})
+
         #render page with search results
-        return render_template('results.html', results=results)
+        return render_template('results.html', results=results, similar_products=similar_products)
     else:
       flash("Invalid Search")
 
@@ -135,7 +149,7 @@ def user_library():
 
 
 # create borrow request
-@app.route("/borrow/<int:product_id>/<int:lender_id>", methods=["POST","GET"])
+@app.route("/borrow/product/<int:product_id>/lender/<int:lender_id>", methods=["POST","GET"])
 def borrow(product_id, lender_id):
     user_id = session.get("user_id", None)
     form = BorrowForm(product_id=product_id, lender_id=lender_id, user_id=user_id)
@@ -155,12 +169,12 @@ def borrow(product_id, lender_id):
         #Add the object to a session and commit it.
         model.session.add(borrow_request)
         model.session.commit()
-        return redirect("/")
+        return redirect("/dashboard")
     else:
         flash("didn't work")
 
     library_item = model.session.query(model.Library).filter_by(product_id=product_id).first()
-    return render_template("borrow.html", library_item=library_item, user_id=user_id, form=form)
+    return render_template("borrow.html", library_item=library_item, user_id=user_id, lender_id=lender_id,form=form)
 
 
 # accept contact's borrow request

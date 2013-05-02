@@ -1,7 +1,7 @@
 {% extends "layout.html" %}
 {% block body %}
 
-<form method="POST" action="/borrow/{{ library_item.product_id }}/{{ user_id }}" name="borrow_form" class="form-signin">
+<form method="POST" action="/borrow/product/{{ library_item.product_id }}/lender/{{ lender_id }}" name="borrow_form" class="form-signin">
 <h3 class="form-signin-heading">Can I Borrow Your {{ library_item.product.name }}?</h3>
 <img src='{{ library_item.product.default_photo }}' />
 
