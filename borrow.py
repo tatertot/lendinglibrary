@@ -1,5 +1,5 @@
 import datetime
-from flask import Flask, flash, render_template, redirect, request, url_for, escape, session, g
+from flask import Flask, flash, render_template, redirect, request, url_for, escape, session, g, jsonify
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 import model
 from forms import BorrowForm, SignUpForm, LoginForm, SearchForm, AddProductForm
@@ -321,17 +321,40 @@ def amazon_search():
 
     return render_template("amazon_search.html", node = result, total_results=total_results)
 
-@app.route("/sms")
-def send_sms():
+
+@app.route("/checkin_product/<int:history_id>/<int:user_id>", methods=["POST","GET"])
+def checkin_item(history_id,user_id):
+    request = model.History.query.get(history_id)
+    request.date_returned = datetime.datetime.now()
+    product = model.Library.query.get(request.product_id)
+    product.status = 1
+    model.session.commit()
+    return redirect(url_for('dashboard', user_id=user_id))
+
+
+@app.route("/send_sms/<int:history_id>", methods=["POST"])
+def send_sms(history_id):
     # Twilio AccountSid and AuthToken.
     # Twilio Number - 4156716511
+    print history_id
     account_sid = 'AC23889a8a2f2d7e92e141f10b1265a53e'
     auth_token = 'a8c49ea47fa7a0cbbcc481f696833f8f'
     client = TwilioRestClient(account_sid, auth_token)
-    
+    history = model.History.query.get(history_id)
+    print history.id, history_id
+    borrower_num = history.borrower.phone_number
+    borrower_num = "1" + borrower_num
+    msg = "Hey ", history.borrower.fname, ", Please return ", history.lender.fname, "'s ", history.product.name,"."
+    msg = ''.join(msg)
+
     message = client.sms.messages.create(to="+14153122776", from_="+14156716511",
-                                         body="Hello there!")
-    return render_template("sms.html")
+                                         body=msg)
+    if message.sid:
+        return jsonify(history_id=history_id, msg='Message Sent')
+    else:
+        return jsonify(history_id=history_id, msg='SMS Failed, Please Try Again')
+
+
 
 if __name__ == "__main__":
     app.run(debug = True)

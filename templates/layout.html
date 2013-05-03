@@ -8,7 +8,6 @@
         <link rel="stylesheet" href="/static/css/bootstrap.css" type="text/css">
         <link href="/static/css/bootstrap-responsive.css" rel="stylesheet">
         <link rel="stylesheet" href="/static/css/main.css" type="text/css">
-
         <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" />
 
 </head>
@@ -61,13 +60,33 @@
           $(function() {
             $(".datepicker" ).datepicker({dateFormat: 'd-M-yy'});
           });
+          </script>
 
-        </script>
 
-    <script type="text/javascript">
-        (function() {
-            $("[rel=popover]").popover();
-        })();
+    <script>
+    $(function() {
+      $(".send_sms").click(function(e) {
+        e.preventDefault();
+        
+        sms_url = $('.send_sms').attr('href');
+        $(this).css({ opacity: 0.5 });
+        $(this).parent().append('<span id="spinner"></span>');
+        $.ajax({
+          type: "POST",
+          url: sms_url,
+          dataType: "json",
+          success: function(data) { 
+            status = data;
+            span_id = "sms-"+data.history_id;
+            console.log(span_id);
+            $("."+span_id).html(data.msg);
+          }
+        });
+
+      });
+    });
+
+
     </script>
 
     </body>

@@ -86,3 +86,17 @@ h1,h2,h3,.navbar {
   box-shadow:0 0 5px #DDDDDD;
 }
 
+#spinner {
+  width: 24px;
+  height:24px;
+  padding-left: 20px;
+  background:url('/static/img/spinner_arrows.gif') no-repeat top left;
+  position:absolute;
+  left:50%;
+  top:0;
+}
+.sms_box {
+  display:block;
+  position:relative;
+  float:left;
+}

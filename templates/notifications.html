@@ -36,27 +36,25 @@
 				Returning on: 
 					{% if item.date_returned_est is not none %} 
 						{{ item.date_returned_est.strftime('%x') }} 
-						{% if item.date_returned_est.strftime('%x') < current_date.strftime('%x')  %}<br />
-						<span class="badge badge-important">Overdue</span> 
-						<a href="/sms/{{ item.product_id}}/{{ item.borrower.id }}">Send SMS Reminder<a></br/>
-						<a href="#" data-toggle="tooltip" title="first tooltip">hover over me</a>
-						
+						{% if item.date_returned_est.strftime('%x') < current_date.strftime('%x')  %}
+						<span class="badge badge-important">Overdue</span> <br />
+
+
+						 
+            <span class="sms-{{item.id}} sms_box">
+            	<a href="{{ url_for('send_sms', history_id=item.id) }}" class="send_sms">Send SMS Reminder</a>
+            </span>
 						{% endif %}<br />
 					{% endif %}
 
 			</p>
 				<a href="{{ url_for('checkin_item', history_id=item.id, user_id=user_id) }}" class="btn btn-mini btn-success">Check-In Item</a>
-			
 		</div>
 	
 	
 	{% endfor %}
 
-	<div data-content="And here's some amazing content. It's very engaging. right?" rel="popover" class="btn danger"  data-original-title="A title" class="popup-marker">hover for popover</div>
-
 	</div>
-
-
 
 
 
