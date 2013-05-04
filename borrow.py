@@ -97,13 +97,14 @@ def sign_up():
 def search():
     form = SearchForm()
     if form.validate_on_submit():
+      referrer = form.referrer.data
       query = form.query.data
       results = model.session.query(model.Library).filter(model.Library.product_desc.like('%'+ query + '%')).all()
-
+      print referrer
       print "These are the results:",results
       if not results:
         #redirect to new page with amazon search results
-        return redirect(url_for('amazon_bottlenose2', query=query))
+        return redirect(url_for('amazon_bottlenose2', query=query, referrer=referrer))
       else:
         for i in results:
             similar_products = None
@@ -118,8 +119,8 @@ def search():
             similar_products = similar_root.xpath('//aws:Items/aws:Item', 
                              namespaces={'aws' : nspace})
 
-        #render page with search results
-        return render_template('results.html', results=results, similar_products=similar_products)
+            #render page with search results
+            return render_template('results.html', results=results, similar_products=similar_products)
     else:
       flash("Invalid Search")
 
@@ -130,22 +131,21 @@ def search():
 @app.route("/dashboard")
 @login_required
 def dashboard():
-    user_list = model.session.query(model.User).all()
-    library = model.session.query(model.Library).filter_by(user_id=current_user.id)
+    user_list = model.User.query.get(current_user.id)
     histories = model.session.query(model.History).filter_by(lender_id=current_user.id)
+    borrowed = model.session.query(model.History).filter_by(borrower_id=current_user.id, date_returned = None)
     notifications = request_notifications()
     search_bar = search()
 
-    return render_template("user_library.html", users=user_list, library=library, user_id=current_user.id, notifications=notifications, histories=histories, search=search_bar)
+    return render_template("user_library.html", user=user_list, user_id=current_user.id, notifications=notifications, histories=histories, borrowed=borrowed,search=search_bar)
 # user's lending library
 # click on username and view list of producsts in their library
 
-@app.route("/user_library")
+@app.route("/users")
 def user_library():
-
     user_list = model.session.query(model.User).all()
-    library = model.session.query(model.Library).filter_by(user_id=current_user.id)
-    return render_template(users=user_list, library=library)
+    
+    return render_template("user_list.html",users=user_list)
 
 
 # create borrow request
@@ -210,9 +210,23 @@ def add_product():
                                 custom_photo=custom_photo)
         model.session.add(new_product)
         model.session.commit()
-        return redirect("/dashboard")
-    return render_template("add_product.html", title="Add a Product", form=form)
+        return jsonify(msg='Success')
+    else:
+        return 'Fail'
+    search_bar = search()
+    return render_template("add_product.html", title="Add a Product", form=form, search=search_bar)
 
+# @app.route("/add_from_amazon/<name>/<asin>/<category_id>/default_photo", methods = ["POST"])
+# def add_from_amazon(name,asin,category_id,default_photo):
+#     new_product = model.Product(name = name, 
+#                                 asin = asin, 
+#                                 category_id=category_id, 
+#                                 default_photo = default_photo)
+#     model.session.add(new_product)
+#     model.session.add(new_product)
+#     model.session.commit()
+        
+#     return jsonify(msg='Success')
 
 # remove_product
 def remove_product():
@@ -290,14 +304,17 @@ def amazon_bottlenose():
     api = bottlenose.Amazon(AWS_KEY, SECRET_KEY, ASSOC_TAG)
     root = api.SimilarityLookup(ItemId="B004VMAC8I", ResponseGroup="Images")
     response = objectify.fromstring(root)
-
     return render_template("amazon_bottlenose.html", response=response)
 
-@app.route("/amazon_bottlenose2/<query>")
-def amazon_bottlenose2(query):
+@app.route("/amazon_bottlenose2/<query>/<referrer>")
+def amazon_bottlenose2(query,referrer):
     amazon = AmazonAPI(AWS_KEY, SECRET_KEY, ASSOC_TAG)
     products = amazon.search(Keywords=query, SearchIndex='All')
-    return render_template("amazon_bottlenose2.html", products = products)
+    if referrer == 'dashboard':
+        return render_template("amazon_bottlenose2.html", products = products)
+    else:
+        form = AddProductForm()
+        return render_template("amazon_bottlenose_add.html", products = products, form=form)
 
 
 

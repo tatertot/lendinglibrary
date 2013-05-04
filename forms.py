@@ -43,4 +43,5 @@ class BorrowForm(Form):
     end_date = TextField('end_date', validators = [Required()])
 
 class SearchForm(Form):
+    referrer = HiddenField('referrer')
     query = TextField('query', validators = [Required()])

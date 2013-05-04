@@ -31,7 +31,7 @@
               <li><a href="/login">Login</a></li>
               <li><a href="/logout">Logout</a></li>
               <li><a href="/dashboard">Dashboard</a></li>
-              <li><a href="/notifications/{{current_user.id}}">Notifications</a></li>
+              <li><a href="/users">Visit Libraries</a></li>
             </ul>
 
           </div><!--/.nav-collapse -->
@@ -59,6 +59,49 @@
           <script>
           $(function() {
             $(".datepicker" ).datepicker({dateFormat: 'd-M-yy'});
+
+            $('#query').click(function(e){
+              var page_url = $(location).attr('href');
+              var urlsplit = page_url.split("/");
+              var url_len = urlsplit.length;
+              var referrer = urlsplit[url_len - 1];
+              $("#referrer").val(referrer);
+              console.log(referrer);
+            })
+
+            $('.product_module').click(function(e){
+              var user_id = $('#user_id').html()
+              var name = $('.product_title',this).html();
+              var asin = $('.asin',this).html();
+              var default_photo = $('.product_img',this).attr('src');
+
+              console.log(user_id,name,asin,default_photo);
+
+              var form_data = {
+                'csrf_token': $('#csrf_token').val(),
+                'user_id': $('#user_id').html(),
+                'name': $('.product_title',this).html(),
+                'asin': $('.asin',this).html(),
+                'category_id': '',
+                'default_photo': $('.product_img',this).attr('src'),
+                'custom_photo': ''
+              };
+
+              console.log(form_data[0]);
+
+                $.ajax({
+                    type: "POST",
+                    url: '/add_product',
+                    dataType: "json",
+                    data: form_data,
+                    success: function(data) { 
+                      status = data;
+                      $(this).remove()
+                  }
+                });
+
+            })
+            
           });
           </script>
 
@@ -68,7 +111,8 @@
       $(".send_sms").click(function(e) {
         e.preventDefault();
         
-        sms_url = $('.send_sms').attr('href');
+        sms_url = $(this).attr('href');
+        console.log(sms_url);
         $(this).css({ opacity: 0.5 });
         $(this).parent().append('<span id="spinner"></span>');
         $.ajax({

@@ -6,7 +6,38 @@ body {
 h1,h2,h3,.navbar {
   font-family: 'Oswald', sans-serif;
 }
-
+a:hover,a:active{text-decoration:none;}
+.jumbotron{
+  background:url('/static/img/circles.jpg') repeat top left;
+  width:1090px;
+  height:340px;
+  -moz-border-radius: 20px;
+  -webkit-border: 20px;
+  border-radius:20px;
+  padding:20px;
+  color:#fff;
+  position:relative;
+}
+.jumbotron #jtext {
+  position:absolute;
+  top:0;
+  right:0;
+  height:340px;
+  width:350px;
+  padding:20px;
+  background-color:#000;
+  opacity:.8;
+  -webkit-border-top-right-radius: 20px;
+  -webkit-border-bottom-right-radius: 20px;
+  -moz-border-radius-topright: 20px;
+  -moz-border-radius-bottomright: 20px;
+  border-top-right-radius: 20px;
+  border-bottom-right-radius: 20px;
+  border-left:5px solid #00CED1;
+}
+.home .span4 {
+  border-left:2px solid #00CED1;
+}
 .navbar-inverse .navbar-inner {
   border-bottom: 6px solid #00CED1;
 }
@@ -45,11 +76,11 @@ h1,h2,h3,.navbar {
   padding:20px;
 }
 .container.wrapper .span8{
-  padding:0 20px;
+  padding:10px 20px;
   background-color:#fff;
 }
 .container.wrapper .span4{
-  padding:0 20px;
+  padding:10px 20px;
   background-color:#eee;
   margin-top:-1px;
 }
@@ -85,12 +116,66 @@ h1,h2,h3,.navbar {
 .product_box {
   box-shadow:0 0 5px #DDDDDD;
 }
-
+.product_module {
+  padding:10px 10px 0 10px;
+  margin:10px;
+  width:150px;
+  height:250px;
+  display:block;
+  overflow:hidden;
+  float:left;
+  background-color:#fff;
+  box-shadow:0 0 2px #DDDDDD;
+  border:1px solid #ccc;
+  position:relative;
+  border-radius:8px;
+}
+.product_module:hover {
+  opacity:.7;
+}
+.product_title {
+  position:absolute;
+  background:url('/static/img/dark_exa.png');
+  bottom:-10px;
+  left:0;
+  width:150px;
+  height:45px;
+  padding:10px 10px 12px;
+  color:#eee;
+  font-size:13px;
+  line-height:18px;
+  text-overflow: ellipsis;
+  overflow:hidden;
+  border-top:1px solid #00CED1;
+}
+.short_text{
+  width:150px;
+  height:20px;
+  padding-bottom:2px;
+  overflow:hidden;
+  display:block;
+}
+.flag{
+  width:56px;
+  height:56px;
+  position:absolute;
+  top:0;
+  right:0;
+  background:url('/static/img/add_flag.png');
+}
+.img_box {
+  height:150px;
+}
+.img_box img{
+  max-height:150px;
+  width:auto;
+  margin:0 auto;
+}
 #spinner {
   width: 24px;
   height:24px;
   padding-left: 20px;
-  background:url('/static/img/spinner_arrows.gif') no-repeat top left;
+  background:url('/static/img/spinner_arrows.gif') no-repeat top left #000;
   position:absolute;
   left:50%;
   top:0;

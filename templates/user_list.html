@@ -1,23 +1,37 @@
 {% extends "layout.html" %}
 {% block body %}
+<!-- ALL USERS -->
+<div class="row-fluid">
 
-<h1>Users</h1>
-<h2>Complete User List</h2>
+	<div class="span12">
 
-{% for user in users %}
+	<h1>Lending Libraries</h1>
 
+	{% for user in users %}
 
-<h3>User {{ user.id }}: {{ user.fname }}, has {{ user.libraries|length }} products</h3>
+	<h2>{{ user.fname }}'s Lending Library <small>{{ user.libraries|length }} products</small></h2>
+		<div class="clearfix">
+		
+		{% for product in user.libraries %}
+		<div class="product_module">
+			<p class="product_title"><span class="short_text">{{ product.product_desc }}</span>
+				<a href='{{ url_for("borrow", product_id=product.id, lender_id=user.id ) }}' class="btn btn-small btn-primary">Borrow</a></p>
+				<div class="img_box"><img src='{{ product.product.default_photo }}' /></div>
+				{% if product.status == 1 %}
+				<span class="label label-success">Available Now</span>
+					{% else %}
+				<span class="label label-important">On Loan</span>
+				{% endif %}
 
-{% for product in user.libraries %}
-<p>Product descprition: {{ product.product_desc }}</p>
-<img src='{{ product.product.default_photo }}' />
-
-<!-- change this to borrow/lend based on user -->
-<p><a href='{{ url_for("borrow", product_id=product.id, lender_id=user.id ) }}'>Borrow</a></p>
-
-{% endfor %}
-
-{% endfor %}
+				<br />
+				
+			
+		</div>
+		{% endfor %}
+		</div>
+	{% endfor %}
+</div>
+</div>
 
 {% endblock %}
+

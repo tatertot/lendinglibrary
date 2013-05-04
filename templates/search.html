@@ -1,6 +1,7 @@
 <form method="POST" action="/search" name="search_form" class="form-search">
   
   {{form.hidden_tag()}}
+  {{form.referrer()}}
 
   <h3>Need to borrow something?</strong></h3>
     <div class="input-append">
@@ -8,6 +9,6 @@
       {% for error in form.errors.query %}
       <span style = "color: red;">[{{error}}]</span>
       {% endfor %}
-       <button type="submit" class="btn">Search</button>
+       <button type="submit" class="btn" id="search_btn">Search</button>
     </div>
 </form>

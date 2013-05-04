@@ -71,7 +71,7 @@ class Library(Base):
 	user_id = Column(Integer(), ForeignKey('users.id'), nullable = True)
 	product_id = Column(Integer(), ForeignKey('products.id'), nullable = True)
 	product_desc = Column(String(64), nullable  = True)
-	status = Column(Integer(), nullable = False)
+	status = Column(Integer(), default=0)
 	user = relationship("User", backref=backref("libraries", order_by=id))
 	product = relationship("Product", backref=backref("libraries", order_by=id))
 
@@ -100,13 +100,11 @@ class History(Base):#change table to Request?
 	date_returned_est = Column(DateTime(), nullable  = True)
 	date_returned = Column(DateTime(), nullable  = True)
 	declined = Column(Boolean(), default=False)
-	#returned = Column(Boolean(), default=False)
+	#status = Column(Integer(), default=1) #1=onloan, #2=returned on time #3=returned late
 	lender = relationship("User", primaryjoin="History.lender_id==User.id")
 	borrower = relationship("User", primaryjoin="History.borrower_id==User.id")
 	product = relationship("Product", backref=backref("histories", order_by=id))
 
-
-	#ADD STATUS HERE
 
 	# By using backref you can access the product table using product.histories
 

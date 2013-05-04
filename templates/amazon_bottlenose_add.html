@@ -1,11 +1,27 @@
-{% extends "dashboard.html" %}
+{% extends "layout.html" %}
 {% block body %}
+  <div class="row-fluid">
+  <span id="user_id">{{current_user.id}}</span>
+  <div class="span12">
+	<h3>Do you want to add any of these to your library?</h3>
 
-<div class="row-fluid">
+  {% for product in products %}
 
-  <div class="span8">
+	<div class="product_module">
+      <span class="flag"></span>
+     	<p class="product_title">
+     		{{product.title}}
+     	</p>
+      <img src='{{ product.medium_image_url}}' class="product_img" />
+      <span class="asin">{{product.asin}}</span>
+  	</div>
+  {% endfor %}
+  </div>
+</div>
+</div>
 
-    <form method="POST" action="/add_product" name="add_product_form" class="form-signin">
+<div style="display:hidden">
+   <form method="POST" action="/add_product" name="add_product_form" class="form-signin">
 <h3 class="form-signin-heading">Add a Product to Your Lending Library</h3>
    {{form.hidden_tag()}}
 
@@ -41,16 +57,6 @@
 
    <input type="submit" class="btn btn-large btn-primary" value="Add New Product">
 </form>
-
-  </div>
-
-  <div class="span4 sidebar">
-    {{ search|safe }}
-  </div>
 </div>
-
-
-
-
-
+	
 {% endblock %}
