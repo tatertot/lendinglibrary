@@ -5,7 +5,9 @@
 
 <!-- CURRENT LOGGED IN USER -->
 <div id="announcements" class="clearfix">
-	<h1>Items You've Borrowed</h1>
+	<h1>{{ user.fname }}'s Dashboard</h1>
+	<hr />
+	<h2>You've borrowed these items</h2>
 {% for item in borrowed %}
 	<div class="product_module small">
 		<p class="product_title">{{ item.lender.fname }}'s {{ item.product.name }}</p>
@@ -22,11 +24,12 @@
 {% endfor %}
 </div>
 
+	<hr />
 
-<h1>{{ user.fname }}'s Lending Library <small>({{ user.libraries|length }} products)</small></h1>
+<h2>{{ user.fname }}'s Lending Library <small>({{ user.libraries|length }} products)</small></h2>
 <p><a href="/add_product/new"><span class="icon-plus-sign"></span> Add Product</a></p>
 
-	<table class="table table-condensed">
+	<table class="table table-striped">
 	<tr>
 		<th width=90%>Product</th>
 		<th width=10%>Status</th>

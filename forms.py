@@ -34,6 +34,12 @@ class AddProductForm(Form):
     default_photo = TextField('Default Photo')
     custom_photo = TextField('Photo')
 
+class AddToLibraryForm(Form):
+    user_id = HiddenField('user_id')
+    product_id = HiddenField('Product Id')
+    product_desc = TextField('Product Description')
+    asin = TextField('Amazon Id')
+    status = TextField('Status')
 
 class BorrowForm(Form):
     user_id = HiddenField('borrower_id')

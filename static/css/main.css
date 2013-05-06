@@ -53,7 +53,7 @@ a:hover,a:active{text-decoration:none;}
 .form-signin {
   max-width: 300px;
   padding: 19px 29px 29px;
-  margin: 40px auto 20px;
+  margin: 40px auto 80px;
   background-color: #fff;
   border: 1px solid #e5e5e5;
   -webkit-border-radius: 5px;
@@ -202,7 +202,7 @@ a:hover,a:active{text-decoration:none;}
   width: 24px;
   height:24px;
   padding-left: 20px;
-  background:url('/static/img/spinner_arrows.gif') no-repeat top left #000;
+  background:url('/static/img/spinner_arrows.gif') no-repeat top left;
   position:absolute;
   left:50%;
   top:0;
@@ -211,4 +211,12 @@ a:hover,a:active{text-decoration:none;}
   display:block;
   position:relative;
   float:left;
+}
+
+#footer {
+  margin-bottom:-40px;
+  color:#666;
+  font-size:12px;
+  text-align:center;
+
 }

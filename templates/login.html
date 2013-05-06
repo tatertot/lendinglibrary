@@ -3,19 +3,32 @@
 
 <form method="POST" action="/login" name="login_form" class="form-signin">
 
+          {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="alert">
+              <button type="button" class="close" data-dismiss="alert">&times;</button>
+              <ul>
+                {% for message in messages %}
+                <li>{{message}}</li>
+                {% endfor %}
+              </ul>
+            </div>
+            {% endif %}
+          {% endwith %}
+          
 <h3 class="form-signin-heading">Login</h3>
   
   {{form.hidden_tag()}}
 
   <label for="email">Email</label>
   {{form.email(size = 30)}}
-  {% for error in form.errors.email %}
+  {% for error in form.errors.email %}<br />
   <span style = "color: red;">[{{error}}]</span>
   {% endfor %}
 
   <label for="password">Password</label>
   {{form.password(size = 30)}}
-  {% for error in form.errors.password %}
+  {% for error in form.errors.password %}<br />
   <span style = "color: red;">[{{error}}]</span>
   {% endfor %}
 

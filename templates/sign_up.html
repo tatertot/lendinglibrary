@@ -2,6 +2,20 @@
 {% block body %}
 
 <form method="POST" action="/sign_up" name="signup_page" class="form-signin">
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="alert">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <ul>
+          {% for message in messages %}
+          <li>{{message}}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+    {% endwith %}
+
   <h2 class="form-signin-heading">Sign Up</h2>
 
   {{form.hidden_tag()}}

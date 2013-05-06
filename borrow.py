@@ -2,7 +2,7 @@ import datetime
 from flask import Flask, flash, render_template, redirect, request, url_for, escape, session, g, jsonify
 from wtforms import Form, BooleanField, TextField, PasswordField, validators
 import model
-from forms import BorrowForm, SignUpForm, LoginForm, SearchForm, AddProductForm
+from forms import BorrowForm, SignUpForm, LoginForm, SearchForm, AddProductForm, AddToLibraryForm
 from flask.ext.login import login_user, logout_user, login_required
 from flask.ext.login import LoginManager, current_user
 from amazonproduct.api import API 
@@ -43,13 +43,13 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
       user = model.session.query(model.User).filter(model.User.email == form.email.data).first()
-      user_password = user.password
+      user_password = form.password.data
      
-      if user is not None:
+      if user is not None and user_password == user.password:
         login_user(user)
         
         flash("logged in successfully")
-        return redirect(url_for("index"))
+        return redirect(url_for("dashboard"))
       else:
         flash("Incorrect Password")
         return redirect("login")
@@ -100,8 +100,7 @@ def search():
       referrer = form.referrer.data
       query = form.query.data
       results = model.session.query(model.Library).filter(model.Library.product_desc.like('%'+ query + '%')).all()
-      print referrer
-      print "These are the results:",results
+
       if not results:
         #redirect to new page with amazon search results
         return redirect(url_for('amazon_bottlenose2', query=query, referrer=referrer))
@@ -145,6 +144,7 @@ def dashboard():
 # click on username and view list of producsts in their library
 
 @app.route("/users")
+@login_required
 def user_library():
     user_list = model.session.query(model.User).all()
     
@@ -201,10 +201,10 @@ def add_product(referrer):
 
     if form.validate_on_submit():
         user_id = form.user_id.data
-        name = form.name.data
-        asin = form.asin.data
+        name = form.name.data.strip()
+        asin = form.asin.data.strip()
         category_id = form.category_id.data
-        default_photo = form.default_photo.data
+        default_photo = form.default_photo.data.strip()
         custom_photo = form.custom_photo.data
         new_product = model.Product(name = name, 
                                 asin = asin, 
@@ -213,6 +213,14 @@ def add_product(referrer):
                                 custom_photo=custom_photo)
         model.session.add(new_product)
         model.session.commit()
+        new_product_id = new_product.id
+        add_to_lib = model.Library(user_id=user_id, 
+                                product_id=new_product_id,
+                                product_desc=name,
+                                status=1)
+        model.session.add(add_to_lib)
+        model.session.commit()
+
         return jsonify(msg='Success')
     else:
         if referrer=='new':
@@ -220,7 +228,25 @@ def add_product(referrer):
         else:
             return 'Fail'
 
-    
+@app.route("/add_to_library/", methods=["POST","GET"])    
+def add_to_library():
+    form = AddToLibraryForm(Form)
+
+    if form.validate_on_submit():
+        user_id = form.user_id.data
+        product_id = form.product_id.data.strip()
+        product_desc = form.product_desc.data.strip()
+        status = 1
+        new_product = model.Library(user_id=user_id, 
+                                product_id=product_id,
+                                product_desc=product_desc,
+                                status=status)
+        model.session.add(new_product)
+        model.session.commit()
+        return jsonify(msg='Success')
+    else:
+        return 'Fail'
+
 
 
 # manage library
@@ -326,6 +352,16 @@ def amazon_bottlenose():
 
 @app.route("/amazon_bottlenose2/<query>/<referrer>")
 def amazon_bottlenose2(query,referrer):
+    amazon = AmazonAPI(AWS_KEY, SECRET_KEY, ASSOC_TAG)
+    products = amazon.search(Keywords=query, SearchIndex='All')
+    if referrer == 'dashboard':
+        return render_template("amazon_bottlenose2.html", products = products)
+    else:
+        form = AddProductForm()
+        return render_template("amazon_bottlenose_add.html", products = products, form=form)
+
+@app.route("/app_results")
+def app_results(query):
     amazon = AmazonAPI(AWS_KEY, SECRET_KEY, ASSOC_TAG)
     products = amazon.search(Keywords=query, SearchIndex='All')
     if referrer == 'dashboard':
