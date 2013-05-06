@@ -111,13 +111,15 @@ def search():
             if i.product.asin:
                 asin = i.product.asin
                 api = API(AWS_KEY, SECRET_KEY, 'us', ASSOC_TAG)
-        
-            similar_root = api.similarity_lookup(asin, ResponseGroup='Large')
-            #~ from lxml import etree
-            #~ print etree.tostring(root, pretty_print=True)
-            nspace = similar_root.nsmap.get(None, '')
-            similar_products = similar_root.xpath('//aws:Items/aws:Item', 
+            try:
+                similar_root = api.similarity_lookup(asin, ResponseGroup='Large')
+                #~ from lxml import etree
+                #~ print etree.tostring(root, pretty_print=True)
+                nspace = similar_root.nsmap.get(None, '')
+                similar_products = similar_root.xpath('//aws:Items/aws:Item', 
                              namespaces={'aws' : nspace})
+            except:
+                similar_products = None
 
             #render page with search results
             return render_template('results.html', results=results, similar_products=similar_products)
@@ -134,10 +136,11 @@ def dashboard():
     user_list = model.User.query.get(current_user.id)
     histories = model.session.query(model.History).filter_by(lender_id=current_user.id)
     borrowed = model.session.query(model.History).filter_by(borrower_id=current_user.id, date_returned = None)
+    current_date = datetime.datetime.now()
     notifications = request_notifications()
     search_bar = search()
 
-    return render_template("user_library.html", user=user_list, user_id=current_user.id, notifications=notifications, histories=histories, borrowed=borrowed,search=search_bar)
+    return render_template("user_library.html", user=user_list, user_id=current_user.id, notifications=notifications, histories=histories, borrowed=borrowed,search=search_bar,current_date=current_date)
 # user's lending library
 # click on username and view list of producsts in their library
 
@@ -191,11 +194,11 @@ def product_list():
 def product(id):
     pass
 
-
-# add product
-@app.route("/add_product", methods = ["POST","GET"])
-def add_product():
+@app.route("/add_product/<referrer>", methods = ["POST","GET"])
+def add_product(referrer):
     form = AddProductForm()
+    search_bar = search()
+
     if form.validate_on_submit():
         user_id = form.user_id.data
         name = form.name.data
@@ -212,8 +215,20 @@ def add_product():
         model.session.commit()
         return jsonify(msg='Success')
     else:
-        return 'Fail'
-    search_bar = search()
+        if referrer=='new':
+            return render_template("add_product.html", title="Add a Product", form=form, search=search_bar)
+        else:
+            return 'Fail'
+
+    
+
+
+# manage library
+@app.route("/manage")
+def manage():
+    form = AddProductForm()
+    add_product = add_product()
+    search-search()
     return render_template("add_product.html", title="Add a Product", form=form, search=search_bar)
 
 # @app.route("/add_from_amazon/<name>/<asin>/<category_id>/default_photo", methods = ["POST"])

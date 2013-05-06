@@ -2,44 +2,51 @@
 {% block main_content %}
 
 <!-- CURRENT LOGGED IN USER -->
-<div id="announcements">
+
+<!-- CURRENT LOGGED IN USER -->
+<div id="announcements" class="clearfix">
 	<h1>Items You've Borrowed</h1>
-<table class="table table-condensed">
 {% for item in borrowed %}
+	<div class="product_module small">
+		<p class="product_title">{{ item.lender.fname }}'s {{ item.product.name }}</p>
+			<div class="img_box"><img src='{{ item.product.default_photo }}' /></div>
+			{% if item.date_returned_est %}
+			Due: {{ item.date_returned_est.strftime('%x')}}
 
-
-	<tr>
-		<td width=100><p>{{ item.product.name }}</p></td>
-		<td width=450></td>
-		<td>
+			{% if item.date_returned_est.strftime('%x') < current_date.strftime('%x')  %}
+				<span class="badge badge-important overdue">Overdue</span> <br />
+			{% endif %}
+			{% endif %}
 	
-		</td>
-	</tr>
-
-
+	</div>
 {% endfor %}
-</table>
 </div>
 
 
 <h1>{{ user.fname }}'s Lending Library <small>({{ user.libraries|length }} products)</small></h1>
 <p><a href="/add_product"><span class="icon-plus-sign"></span> Add Product</a></p>
-	<div class="clearfix">
-	
+
+	<table class="table table-condensed">
+	<tr>
+		<th width=90%>Product</th>
+		<th width=10%>Status</th>
+	</tr>
 	{% for product in user.libraries %}
-	<div class="product_module">
-		<p class="product_title">{{ product.product_desc }}</span></p>
-			<div class="img_box"><img src='{{ product.product.default_photo }}' /></div>
-			Status: 
+
+
+	<tr>
+		<td>{{ product.product_desc }}</td>
+		<td>
 			{% if product.status == 1 %}
 			<span class="label label-success">Checked In</span>
 				{% else %}
 			<span class="label label-important">On Loan</span>
-			{% endif %}
-	
-	</div>
-	{% endfor %}
-	</div>
+			{% endif %}</td>
+	</tr>
+
+
+{% endfor %}
+</table>
 
 
 {% block notifications %} {% endblock %} 

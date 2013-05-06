@@ -9,19 +9,19 @@
 	<div>
     {% for result in results %}
 
-    <div style="background-color:#fff;padding:10px;width:150px;height:250px;overflow:hidden;float:left;display:block;margin:10px;border:1px solid #eee" class="clearfix;">
-		<p>
-			<img src='{{ result.product.default_photo }}' /><br />
-			{{ result.product_desc }}<br /> 
-			Owner: {{ result.user.fname }}<br />
-			<a href='{{ url_for("borrow", product_id=result.product.id, lender_id=result.user_id ) }}' class="btn btn-info">Borrow</a>
-		</p>
+    <div class="product_module small">
+		<p class="product_title">{{ result.product_desc }}<br /> 
+			Owner: {{ result.user.fname }}</p>
+			
+			<div class="img_box"><img src='{{ result.product.default_photo }}' /><a href='{{ url_for("borrow", product_id=result.product.id, lender_id=result.user_id ) }}' class="btn btn-info borrow_btn">Borrow</a></div>
+			
+		
 	</div>
 
     {% endfor %}
 	</div>
 
-	<div style="clear:both">
+	<div style="clear:both;margin-top:40px">
     {% if similar_products > 0 %}
 	    <h3 class="clearfix">How about some gear to go with that?</h3>
 		{% for product in similar_products %}
