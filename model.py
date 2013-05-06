@@ -30,6 +30,8 @@ class User(Base):
     city = Column(String(64), nullable  = True)
     state = Column(String(15), nullable  = True)
     zipcode = Column(String(15),nullable=True)
+    #items_borrowed = Column(Integer, default = 0)
+    #items_returned = Column(Integer, default = 0)
 
     # add methods for the Flask-login to work
     def is_authenticated(self):
@@ -43,6 +45,25 @@ class User(Base):
 
     def get_id(self):
         return unicode(self.id)
+
+    def return_rate(self):
+    	items_returned = session.query(model.History).filter_by(lender_id=self.id).all()
+    	count = 0
+    	late_count = 0
+    	items_borrowed = 0
+    	items_returned = 0
+    	items_onloan = 0
+    	for item in items_returned:
+    		count += 1
+    		if item.date_returned:
+    			items_returned += 1
+    		if item.date_borrowed:
+    			items_borrowed += 1
+
+    	return_rate = (items_returned/items_borrowed)		
+    	print return_rate, items_returned, items_borrowed
+    	return_rate2 = (100/109),"%"
+    	return return_rate2
 
 class Category(Base):
 

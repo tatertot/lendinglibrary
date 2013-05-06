@@ -274,10 +274,13 @@ def check_in_product():
 
 @app.route("/notifications")
 def request_notifications():
+    #get request to borrow notifications 
     notifications = model.session.query(model.History).filter_by(lender_id=current_user.id, date_borrowed=None).all()
+
     #Syntax uses filter over filter_by because of comparison operators
     checked_out = model.session.query(model.History).filter(model.History.lender_id==current_user.id, model.History.date_borrowed >= 0, model.History.date_returned == None)
     current_date = datetime.datetime.now()
+
     return render_template("notifications.html", notifications=notifications, checked_out=checked_out, user_id=current_user.id, current_date=current_date)
 
 
@@ -386,7 +389,11 @@ def send_sms(history_id):
     else:
         return jsonify(history_id=history_id, msg='SMS Failed, Please Try Again')
 
+# @app.route("/return_rate")
+# def return_rate(user_id):
+#     #get the return history of user, num times item returned after return est/item numbers borrowed
+#     items_returned = model.session.query(model.History).filter_by(lender_id=user_id).all()
 
-
+#     return redirect(url_for('dashboard', user_id=user_id))
 if __name__ == "__main__":
     app.run(debug = True)

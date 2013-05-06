@@ -8,7 +8,7 @@ h1,h2,h3,.navbar {
 }
 a:hover,a:active{text-decoration:none;}
 .jumbotron{
-  background:url('/static/img/circles.jpg') repeat top left;
+  background:url('/static/img/header-bw.jpg') no-repeat top left;
   width:1090px;
   height:340px;
   -moz-border-radius: 20px;

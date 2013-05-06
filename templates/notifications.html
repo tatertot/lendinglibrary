@@ -9,6 +9,9 @@
 				<strong>{{ notification.borrower.fname}} wants to borrow your {{ notification.product.name}}</strong><br />
 				dates: {% if notification.date_wanted is not none %} {{ notification.date_wanted.strftime('%x') }} - {% endif %}   {% if notification.date_returned_est is not none %}{{ notification.date_returned_est.strftime('%x') }}{% endif %}<br />
 				Return Rate: 100%
+				{% for rate in notification.borrower.return_rate %}
+				{{ rate }}
+				{% endfor %}
 			</p>
 				<a href="{{ url_for('accept_request', history_id=notification.id, user_id=user_id) }}" class="btn btn-mini btn-info">Accept Request</a>
 			
@@ -42,7 +45,7 @@
 
 						 
             <span class="sms-{{item.id}} sms_box">
-            	<a href="{{ url_for('send_sms', history_id=item.id) }}" class="send_sms">Send SMS Reminder</a>
+            	<a href="{{ url_for('send_sms', history_id=item.id) }}" class="send_sms"><span class=" icon-comment"></span> Send SMS Reminder</a>
             </span>
 						{% endif %}<br />
 					{% endif %}

@@ -3,9 +3,8 @@
   {{form.hidden_tag()}}
   {{form.referrer()}}
 
-  <h3>Need to borrow something?</strong></h3>
     <div class="input-append">
-      {{form.query(size = 40, class="search-query", placeholder="Search Lending Libraries")}}
+      {{form.query(size = 40, class="search-query", placeholder="Search for items")}}
       {% for error in form.errors.query %}
       <span style = "color: red;">[{{error}}]</span>
       {% endfor %}
