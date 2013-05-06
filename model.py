@@ -48,11 +48,8 @@ class User(Base):
 
     def return_rate(self):
     	items_returned = session.query(model.History).filter_by(lender_id=self.id).all()
-    	count = 0
-    	late_count = 0
     	items_borrowed = 0
     	items_returned = 0
-    	items_onloan = 0
     	for item in items_returned:
     		count += 1
     		if item.date_returned:
@@ -61,9 +58,7 @@ class User(Base):
     			items_borrowed += 1
 
     	return_rate = (items_returned/items_borrowed)		
-    	print return_rate, items_returned, items_borrowed
-    	return_rate2 = (100/109),"%"
-    	return return_rate2
+
 
 class Category(Base):
 
