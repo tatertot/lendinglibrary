@@ -121,7 +121,13 @@ def search():
                 similar_products = None
 
             #render page with search results
-            return render_template('results.html', results=results, similar_products=similar_products)
+            if referrer == 'dashboard':
+                return render_template('results.html', results=results, similar_products=similar_products)
+            else:
+                form = AddProductForm()
+                return render_template('add_product_results.html', results=results, similar_products=similar_products, form=form)
+
+
     else:
       flash("Invalid Search")
 
@@ -164,8 +170,6 @@ def borrow(product_id, lender_id):
         date_wanted = datetime.datetime.strptime(form.start_date.data, "%d-%b-%Y")
         date_returned_est = datetime.datetime.strptime(form.end_date.data, "%d-%b-%Y")
 
-        #optional message
-        #message = request.form['message']
         #create query
         borrow_request = model.History(borrower_id=borrower_id, lender_id=lender_id, product_id=product_id,
                                         date_wanted=date_wanted, date_returned_est=date_returned_est)
@@ -177,6 +181,7 @@ def borrow(product_id, lender_id):
         flash("didn't work")
 
     library_item = model.session.query(model.Library).filter_by(product_id=product_id).first()
+    print library_item.id
     return render_template("borrow.html", library_item=library_item, user_id=user_id, lender_id=lender_id,form=form)
 
 
@@ -206,14 +211,19 @@ def add_product(referrer):
         category_id = form.category_id.data
         default_photo = form.default_photo.data.strip()
         custom_photo = form.custom_photo.data
+
+        
         new_product = model.Product(name = name, 
-                                asin = asin, 
-                                category_id=category_id, 
-                                default_photo = default_photo, 
-                                custom_photo=custom_photo)
-        model.session.add(new_product)
-        model.session.commit()
+                                    asin = asin, 
+                                    category_id=category_id, 
+                                    default_photo = default_photo, 
+                                    custom_photo=custom_photo)
         new_product_id = new_product.id
+
+        if referrer == 'new':
+            model.session.add(new_product)
+            model.session.commit()
+
         add_to_lib = model.Library(user_id=user_id, 
                                 product_id=new_product_id,
                                 product_desc=name,
@@ -247,28 +257,6 @@ def add_to_library():
     else:
         return 'Fail'
 
-
-
-# manage library
-@app.route("/manage")
-def manage():
-    form = AddProductForm()
-    add_product = add_product()
-    search-search()
-    return render_template("add_product.html", title="Add a Product", form=form, search=search_bar)
-
-# @app.route("/add_from_amazon/<name>/<asin>/<category_id>/default_photo", methods = ["POST"])
-# def add_from_amazon(name,asin,category_id,default_photo):
-#     new_product = model.Product(name = name, 
-#                                 asin = asin, 
-#                                 category_id=category_id, 
-#                                 default_photo = default_photo)
-#     model.session.add(new_product)
-#     model.session.add(new_product)
-#     model.session.commit()
-        
-#     return jsonify(msg='Success')
-
 # remove_product
 def remove_product():
     pass
@@ -278,7 +266,7 @@ def remove_product():
 def accept_request(history_id,user_id):
     request = model.History.query.get(history_id)
     request.date_borrowed = datetime.datetime.now()
-    product = model.Library.query.get(request.product_id)
+    product = model.Library.query.filter_by(product_id=request.product_id).first()
     product.status = 2
     model.session.commit()
     return redirect(url_for('dashboard', user_id=user_id))
@@ -380,7 +368,7 @@ def amazon_search():
 
     total_results = result.results
 
-#item_search returns pages not items
+    #item_search returns pages not items
 
     # extract paging information
     #total_results = result.results
@@ -409,6 +397,7 @@ def send_sms(history_id):
     # Twilio Number - 4156716511
     print history_id
     account_sid = 'AC23889a8a2f2d7e92e141f10b1265a53e'
+    # SHHHH...Need to move tokens
     auth_token = 'a8c49ea47fa7a0cbbcc481f696833f8f'
     client = TwilioRestClient(account_sid, auth_token)
     history = model.History.query.get(history_id)

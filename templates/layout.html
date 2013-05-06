@@ -83,7 +83,7 @@
               var default_photo = $('.product_img',this).attr('src');
 
               console.log(user_id,name,asin,default_photo);
-
+              $('.flag',this).addClass('added');
               var form_data = {
                 'csrf_token': $('#csrf_token').val(),
                 'user_id': $('#user_id').html(),
@@ -96,7 +96,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: '/add_product/searchs',
+                    url: '/add_product/search',
                     dataType: "json",
                     data: form_data,
                     success: function(data) { 
@@ -126,6 +126,9 @@
           success: function(data) { 
             status = data;
             span_id = "sms-"+data.history_id;
+            console.log(this);
+            console.log(data);
+
             $("."+span_id).html(data.msg);
           }
         });

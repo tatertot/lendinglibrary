@@ -14,13 +14,12 @@
 		
 		{% for product in user.libraries %}
 		<div class="product_module">
-			<p class="product_title"><span class="short_text">{{ product.product_desc }}</span>
-				<a href='{{ url_for("borrow", product_id=product.id, lender_id=user.id ) }}' class="btn btn-small btn-primary">Borrow</a></p>
-				<div class="img_box"><img src='{{ product.product.default_photo }}' /></div>
+			<p class="product_title"><span class="short_text">{{ product.product_desc }}</span></p>
+				<div class="img_box"><img src='{{ product.product.default_photo }}' /><a href='{{ url_for("borrow", product_id=product.id, lender_id=user.id ) }}' class="btn btn-info borrow_btn">Borrow</a></div>
 				{% if product.status == 1 %}
-				<span class="label label-success">Available Now</span>
+				<span class="label label-success status-tag">Available Now</span>
 					{% else %}
-				<span class="label label-important">On Loan</span>
+				<span class="label label-important status-tag">On Loan</span>
 				{% endif %}
 
 				<br />

@@ -1,22 +1,46 @@
 {% extends "layout.html" %}
 {% block body %}
-  <div class="row-fluid">
-  <span id="user_id" style="display:none">{{current_user.id}}</span>
+
+<div class="row-fluid">
   <div class="span12">
-	<h3>Do you want to add any of these to your library?</h3>
+  	<span id="user_id" style="display:none">{{current_user.id}}</span>
+	<h3>Add to Your Library</h3>
+	<div>
+    {% for result in results %}
 
-  {% for product in products %}
+    <div class="product_module small">
+    	<span class="flag"></span>
+		<p class="product_title">{{ result.product_desc }}</p>
+			
+			<div class="img_box">
+				<img src='{{ result.product.default_photo }}' class="product_img" />
+			<span class="asin">{{result.product.asin}}</span>
+			</div>
+			
+		
+	</div>
 
-	<div class="product_module">
-      <span class="flag"></span>
-     	<p class="product_title">
-     		{{product.title}}
-     	</p>
-      <img src='{{ product.medium_image_url}}' class="product_img" />
-      <span class="asin">{{product.asin}}</span>
-  	</div>
-  {% endfor %}
-  </div>
+    {% endfor %}
+	</div>
+
+
+
+
+	<div style="clear:both;pading-top:20px">
+    {% if similar_products > 0 %}
+	    <h3 class="clearfix">How about some gear to go with that?</h3>
+		{% for product in similar_products %}
+			 <div style="background-color:#fff;padding:10px;width:150px;height:220px;overflow:hidden;float:left;display:block;margin:10px;border:1px solid #eee">
+			 <p>
+			    <a href="{{product.DetailPageURL}}">{{product.ItemAttributes.Title}}<br />
+			    	<img src =' {{ product.MediumImage.URL }}' /><br />
+			    	<span style="font-size:9px">ASIN: {{product.ASIN}}</span></a>
+			 </p>
+			</div>
+		{% endfor %}
+	{% endif %}
+	</div>
+
 </div>
 </div>
 
@@ -57,6 +81,5 @@
 
    <input type="submit" class="btn btn-large btn-primary" value="Add New Product">
 </form>
-</div>
-	
+
 {% endblock %}

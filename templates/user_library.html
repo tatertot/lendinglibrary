@@ -12,8 +12,13 @@
 	<div class="product_module small">
 		<p class="product_title">{{ item.lender.fname }}'s {{ item.product.name }}</p>
 			<div class="img_box"><img src='{{ item.product.default_photo }}' /></div>
-			{% if item.date_returned_est %}
-			Due: {{ item.date_returned_est.strftime('%x')}}
+			<small>{% if item.date_returned_est %}
+				{% if item.date_borrowed %}
+					Due: {{ item.date_returned_est.strftime('%x')}}
+				{% else %}
+					Pending Request
+				{% endif %}
+			</small>
 
 			{% if item.date_returned_est.strftime('%x') < current_date.strftime('%x')  %}
 				<span class="badge badge-important overdue">Overdue</span> <br />
@@ -41,16 +46,15 @@
 		<td>{{ product.product_desc }}</td>
 		<td>
 			{% if product.status == 1 %}
-			<span class="label label-success">Checked In</span>
+			<span class="checked-in">Checked In</span>
 				{% else %}
-			<span class="label label-important">On Loan</span>
+			<span class="onloan">On Loan</span>
 			{% endif %}</td>
 	</tr>
 
 
 {% endfor %}
 </table>
-
 
 {% block notifications %} {% endblock %} 
 

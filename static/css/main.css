@@ -163,16 +163,16 @@ a:hover,a:active{text-decoration:none;}
   line-height:18px;
   text-overflow: ellipsis;
   overflow:hidden;
-  border-top:1px solid #00CED1;
+  border-top:2px solid #00CED1;
 }
-.product_module .overdue {
+.product_module .overdue, .status-tag {
   position:absolute;
   top:12px;
   right:12px;
 }
 .short_text{
   width:150px;
-  height:20px;
+  height:50px;
   padding-bottom:2px;
   overflow:hidden;
   display:block;
@@ -184,6 +184,9 @@ a:hover,a:active{text-decoration:none;}
   top:0;
   right:0;
   background:url('/static/img/add_flag.png');
+}
+.flag.added {
+  background-position: 0 -120px;
 }
 .img_box {
   height:150px;
@@ -197,6 +200,14 @@ a:hover,a:active{text-decoration:none;}
   position:absolute;
   top:150px;
   left:45px;
+}
+.checked-in {
+  font-size:11px;
+  color:#5bb75b;
+}
+.onloan {
+  font-size:11px;
+  color:#b94a48;
 }
 #spinner {
   width: 24px;
@@ -215,6 +226,7 @@ a:hover,a:active{text-decoration:none;}
 
 #footer {
   margin-bottom:-40px;
+  padding-top:20px;
   color:#666;
   font-size:12px;
   text-align:center;
