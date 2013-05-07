@@ -2,7 +2,7 @@
 {% block body %}
   <div class="row-fluid">
   <span id="user_id" style="display:none">{{current_user.id}}</span>
-  <div class="span12">
+  <div class="span12 add_to_library">
 	<h3>Do you want to add any of these to your library?</h3>
 
   {% for product in products %}
@@ -13,7 +13,7 @@
      		{{product.title}}
      	</p>
       <img src='{{ product.medium_image_url}}' class="product_img" />
-      <span class="asin">{{product.asin}}</span>
+      <small><span class="asin">{{product.asin}}</span></small>
   	</div>
   {% endfor %}
   </div>

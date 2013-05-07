@@ -13,7 +13,7 @@ class LoginForm(Form):
 class SignUpForm(Form):
     fname = TextField('fname', validators = [Required()])
     lname = TextField('lname', validators = [Required()])
-    mobile_number = TextField('mobile_number')
+    phone_number = TextField('phone_number')
     email = TextField('email',validators = [Required(),
                     v.Email(),
                     v.EqualTo('confirm_email',

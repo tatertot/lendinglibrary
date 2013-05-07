@@ -10,10 +10,10 @@
     {% for result in results %}
 
     <div class="product_module small">
-		<p class="product_title">{{ result.product_desc }}<br /> 
-			Owner: {{ result.user.fname }}</p>
+		<p class="product_title">{{ result.user.fname }}'s {{ result.product_desc }}</p>
 			
-			<div class="img_box"><img src='{{ result.product.default_photo }}' /><a href='{{ url_for("borrow", product_id=result.product.id, lender_id=result.user_id ) }}' class="btn btn-info borrow_btn">Borrow</a></div>
+			<div class="img_box"><img src='{{ result.product.default_photo }}' /><br />
+				<a href='{{ url_for("borrow", product_id=result.product.id, lender_id=result.user_id ) }}' class="btn btn-info borrow_btn">Borrow</a></div>
 			
 		
 	</div>
@@ -28,7 +28,9 @@
 			 <div style="background-color:#fff;padding:10px;width:150px;height:220px;overflow:hidden;float:left;display:block;margin:10px;border:1px solid #eee">
 			 <p>
 			    <a href="{{product.DetailPageURL}}">{{product.ItemAttributes.Title}}<br />
-			    	<img src =' {{ product.MediumImage.URL }}' /><br />
+			    	{% if product.MediumImage.URL %}
+			    	<img src ='{{ product.MediumImage.URL }}' alt="test" /><br />
+			    	{% endif %}
 			    	<span style="font-size:9px">ASIN: {{product.ASIN}}</span></a>
 			 </p>
 			</div>

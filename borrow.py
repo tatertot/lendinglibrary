@@ -80,9 +80,11 @@ def sign_up():
         if user == None:
           fname = form.fname.data
           lname = form.lname.data
+          phone_number = form.phone_number.data
           email = form.email.data
           password = form.password.data
           new_user = model.User(id = None,
+                                phone_number=phone_number,
                                 email=email,
                                 password=password,
                                 fname=fname,
@@ -107,26 +109,27 @@ def search():
       else:
         for i in results:
             similar_products = None
-            try:
-                if i.product.asin:
-                    asin = i.product.asin
-                    api = API(AWS_KEY, SECRET_KEY, 'us', ASSOC_TAG)
+            
+            if i.product.asin:
+                asin = i.product.asin
+                api = API(AWS_KEY, SECRET_KEY, 'us', ASSOC_TAG)
                 
+                try:
                     similar_root = api.similarity_lookup(asin, ResponseGroup='Large')
                     #~ from lxml import etree
                     #~ print etree.tostring(root, pretty_print=True)
                     nspace = similar_root.nsmap.get(None, '')
                     similar_products = similar_root.xpath('//aws:Items/aws:Item', 
                                  namespaces={'aws' : nspace})
-            except:
-                similar_products = None
+                except:
+                    similar_products = None
 
-            #render page with search results
-            if referrer == 'dashboard':
-                return render_template('results.html', results=results, similar_products=similar_products)
-            else:
-                form = AddProductForm()
-                return render_template('add_product_results.html', results=results, similar_products=similar_products, form=form)
+                #render page with search results
+                if referrer == 'dashboard':
+                    return render_template('results.html', results=results, similar_products=similar_products)
+                else:
+                    form = AddProductForm()
+                    return render_template('add_product_results.html', results=results, similar_products=similar_products, form=form)
 
 
     return render_template("search.html", form=form)
@@ -175,11 +178,9 @@ def borrow(product_id, lender_id):
         model.session.add(borrow_request)
         model.session.commit()
         return redirect("/dashboard")
-    else:
-        flash("didn't work")
 
     library_item = model.session.query(model.Library).filter_by(product_id=product_id).first()
-    print library_item.id
+
     return render_template("borrow.html", library_item=library_item, user_id=user_id, lender_id=lender_id,form=form)
 
 
@@ -216,12 +217,10 @@ def add_product(referrer):
                                     category_id=category_id, 
                                     default_photo = default_photo, 
                                     custom_photo=custom_photo)
+        model.session.add(new_product)
+        model.session.commit()
+
         new_product_id = new_product.id
-
-        if referrer == 'new':
-            model.session.add(new_product)
-            model.session.commit()
-
         add_to_lib = model.Library(user_id=user_id, 
                                 product_id=new_product_id,
                                 product_desc=name,
@@ -267,7 +266,7 @@ def accept_request(history_id,user_id):
     product = model.Library.query.filter_by(product_id=request.product_id).first()
     product.status = 2
     model.session.commit()
-    return redirect(url_for('dashboard', user_id=user_id))
+    return redirect(url_for('dashboard'))
 
 
 # user checks product back into their library
@@ -278,7 +277,7 @@ def checkin_item(history_id,user_id):
     product = model.Library.query.get(request.product_id)
     product.status = 1
     model.session.commit()
-    return redirect(url_for('dashboard', user_id=user_id))
+    return redirect(url_for('dashboard'))
 
 def check_in_product():
     pass
