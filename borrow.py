@@ -103,20 +103,21 @@ def search():
 
       if not results:
         #redirect to new page with amazon search results
-        return redirect(url_for('amazon_bottlenose2', query=query, referrer=referrer))
+        return redirect(url_for('amz_search', query=query, referrer=referrer))
       else:
         for i in results:
             similar_products = None
-            if i.product.asin:
-                asin = i.product.asin
-                api = API(AWS_KEY, SECRET_KEY, 'us', ASSOC_TAG)
             try:
-                similar_root = api.similarity_lookup(asin, ResponseGroup='Large')
-                #~ from lxml import etree
-                #~ print etree.tostring(root, pretty_print=True)
-                nspace = similar_root.nsmap.get(None, '')
-                similar_products = similar_root.xpath('//aws:Items/aws:Item', 
-                             namespaces={'aws' : nspace})
+                if i.product.asin:
+                    asin = i.product.asin
+                    api = API(AWS_KEY, SECRET_KEY, 'us', ASSOC_TAG)
+                
+                    similar_root = api.similarity_lookup(asin, ResponseGroup='Large')
+                    #~ from lxml import etree
+                    #~ print etree.tostring(root, pretty_print=True)
+                    nspace = similar_root.nsmap.get(None, '')
+                    similar_products = similar_root.xpath('//aws:Items/aws:Item', 
+                                 namespaces={'aws' : nspace})
             except:
                 similar_products = None
 
@@ -331,32 +332,32 @@ def amazon(query):
 
 
 
-@app.route("/amazon_bottlenose")
-def amazon_bottlenose():
-    api = bottlenose.Amazon(AWS_KEY, SECRET_KEY, ASSOC_TAG)
-    root = api.SimilarityLookup(ItemId="B004VMAC8I", ResponseGroup="Images")
-    response = objectify.fromstring(root)
-    return render_template("amazon_bottlenose.html", response=response)
+# @app.route("/amazon_bottlenose")
+# def amazon_bottlenose():
+#     api = bottlenose.Amazon(AWS_KEY, SECRET_KEY, ASSOC_TAG)
+#     root = api.SimilarityLookup(ItemId="B004VMAC8I", ResponseGroup="Images")
+#     response = objectify.fromstring(root)
+#     return render_template("amazon_bottlenose.html", response=response)
 
-@app.route("/amazon_bottlenose2/<query>/<referrer>")
-def amazon_bottlenose2(query,referrer):
+@app.route("/amz_search/<query>/<referrer>")
+def amz_search(query,referrer):
     amazon = AmazonAPI(AWS_KEY, SECRET_KEY, ASSOC_TAG)
     products = amazon.search(Keywords=query, SearchIndex='All')
     if referrer == 'dashboard':
-        return render_template("amazon_bottlenose2.html", products = products)
+        return render_template("amz_search.html", products = products)
     else:
         form = AddProductForm()
-        return render_template("amazon_bottlenose_add.html", products = products, form=form)
+        return render_template("amz_search_add.html", products = products, form=form)
 
 @app.route("/app_results")
 def app_results(query):
     amazon = AmazonAPI(AWS_KEY, SECRET_KEY, ASSOC_TAG)
     products = amazon.search(Keywords=query, SearchIndex='All')
     if referrer == 'dashboard':
-        return render_template("amazon_bottlenose2.html", products = products)
+        return render_template("amz_search.html", products = products)
     else:
         form = AddProductForm()
-        return render_template("amazon_bottlenose_add.html", products = products, form=form)
+        return render_template("amz_search_add.html", products = products, form=form)
 
 
 

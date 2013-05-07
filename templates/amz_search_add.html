@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+{% block body %}
+  <div class="row-fluid">
+  <span id="user_id" style="display:none">{{current_user.id}}</span>
+  <div class="span12">
+	<h3>Do you want to add any of these to your library?</h3>
+
+  {% for product in products %}
+
+	<div class="product_module">
+      <span class="flag"></span>
+     	<p class="product_title">
+     		{{product.title}}
+     	</p>
+      <img src='{{ product.medium_image_url}}' class="product_img" />
+      <span class="asin">{{product.asin}}</span>
+  	</div>
+  {% endfor %}
+  </div>
+</div>
+</div>
+
+<div style="display:none">
+   <form method="POST" action="/add_product" name="add_product_form" class="form-signin">
+<h3 class="form-signin-heading">Add a Product to Your Lending Library</h3>
+   {{form.hidden_tag()}}
+
+  <label for="name">Product Name</label>
+    {{form.name(size = 30)}}
+    {% for error in form.errors.name %}
+    <span style = "color: red;">[{{error}}]</span>
+    {% endfor %}
+
+    <label for="asin">ASIN</label>
+    {{form.asin(size = 30)}}
+    {% for error in form.errors.asin %}
+    <span style = "color: red;">[{{error}}]</span>
+    {% endfor %}
+
+    <label for="category_id">Category</label>
+    {{form.category_id(size = 30)}}
+    {% for error in form.errors.category_id %}
+    <span style = "color: red;">[{{error}}]</span>
+    {% endfor %}
+
+    <label for="default_photo">Default Photo</label>
+    {{form.default_photo(size = 30)}}
+    {% for error in form.errors.default_photo %}
+    <span style = "color: red;">[{{error}}]</span>
+    {% endfor %}
+
+    <label for="default_photo">Custom Photo</label>
+    {{form.custom_photo(size = 30)}}
+    {% for error in form.errors.custom_photo %}
+    <span style = "color: red;">[{{error}}]</span>
+    {% endfor %}
+
+   <input type="submit" class="btn btn-large btn-primary" value="Add New Product">
+</form>
+</div>
+	
+{% endblock %}
