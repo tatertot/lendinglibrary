@@ -10,7 +10,7 @@ import flask.ext.whooshalchemy as whooshalchemy
 
 
 #This is SQLAlchemy's way of interacting with the db, creating a session
-engine = create_engine("sqlite:///library.db", echo=False)
+engine = create_engine("sqlite:///library_demo.db", echo=False)
 session = scoped_session(sessionmaker(bind=engine,autocommit = False, autoflush = False))
 
 Base = declarative_base()
@@ -30,8 +30,8 @@ class User(Base):
     city = Column(String(64), nullable  = True)
     state = Column(String(15), nullable  = True)
     zipcode = Column(String(15),nullable=True)
-    #items_borrowed = Column(Integer, default = 0)
-    #items_returned = Column(Integer, default = 0)
+    items_borrowed = Column(Integer, default = 0)
+    items_returned = Column(Integer, default = 0)
 
     # add methods for the Flask-login to work
     def is_authenticated(self):
@@ -116,7 +116,7 @@ class History(Base):#change table to Request?
 	date_returned_est = Column(DateTime(), nullable  = True)
 	date_returned = Column(DateTime(), nullable  = True)
 	declined = Column(Boolean(), default=False)
-	#status = Column(Integer(), default=1) #1=onloan, #2=requested #3=returned on time #3=returned late
+	status = Column(Integer(), default=1) #1=onloan, #2=requested #3=returned on time #3=returned late
 	lender = relationship("User", primaryjoin="History.lender_id==User.id")
 	borrower = relationship("User", primaryjoin="History.borrower_id==User.id")
 	product = relationship("Product", backref=backref("histories", order_by=id))

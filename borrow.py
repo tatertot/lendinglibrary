@@ -48,7 +48,7 @@ def login():
       if user is not None and user_password == user.password:
         login_user(user)
         
-        flash("logged in successfully")
+        #flash("logged in successfully")
         return redirect(url_for("dashboard"))
       else:
         flash("Incorrect Password")
@@ -62,7 +62,7 @@ def login():
 @login_required
 def logout():
   logout_user()
-  flash("You are now logged out")
+  #flash("You are now logged out")
   return redirect(url_for("index"))
 
 
@@ -127,10 +127,7 @@ def search():
             else:
                 form = AddProductForm()
                 return render_template('add_product_results.html', results=results, similar_products=similar_products, form=form)
-
-
-    else:
-      flash("Invalid Search")
+                
 
     return render_template("search.html", form=form)
 
