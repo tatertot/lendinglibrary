@@ -62,7 +62,7 @@ def login():
 @login_required
 def logout():
   logout_user()
-  flash("You are now logged out")
+  #flash("You are now logged out")
   return redirect(url_for("index"))
 
 
@@ -128,8 +128,8 @@ def search():
                 return render_template('add_product_results.html', results=results, similar_products=similar_products, form=form)
 
 
-    else:
-      flash("Invalid Search")
+    # else:
+    #   flash("Invalid Search")
 
     return render_template("search.html", form=form)
 
