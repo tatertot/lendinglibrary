@@ -27,7 +27,7 @@
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li><a href="/">Home</a></li>
-              {% if current_user %}
+              {% if current_user.id %}
               <li><a href="/dashboard">Dashboard</a></li>
               <li><a href="/users">Visit Libraries</a></li>
               {% else %}
@@ -37,7 +37,7 @@
             </ul>
 
           </div><!--/.nav-collapse -->
-            {% if current_user %}
+            {% if current_user.id %}
             <span style="float:right;color:#fff;padding-top:3px">Hello,  {{ current_user.fname }}!  <a href="/logout">&nbsp; &nbsp; [ Logout ]</a></li></span>
             {% endif %}
         </div>
