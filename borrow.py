@@ -127,14 +127,7 @@ def search():
             else:
                 form = AddProductForm()
                 return render_template('add_product_results.html', results=results, similar_products=similar_products, form=form)
-<<<<<<< HEAD
-                
-=======
 
-
-    # else:
-    #   flash("Invalid Search")
->>>>>>> master
 
     return render_template("search.html", form=form)
 
