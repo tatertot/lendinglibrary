@@ -109,34 +109,28 @@
 
             })
             
+            $(".send_sms").click(function(e) {
+              e.preventDefault();
+              
+              sms_url = $(this).attr('href');
+              $(this).css({ opacity: 0.5 });
+              $(this).parent().append('<span id="spinner"></span>');
+              $.ajax({
+                type: "POST",
+                url: sms_url,
+                dataType: "json",
+                success: function(data) { 
+                  status = data;
+                  span_id = "sms-"+data.history_id;
+                  console.log(this);
+                  console.log(data);
+
+                  $("."+span_id).html(data.msg);
+                }
+              });
+
+            });
           });
-          </script>
-
-
-    <script>
-    $(function() {
-      $(".send_sms").click(function(e) {
-        e.preventDefault();
-        
-        sms_url = $(this).attr('href');
-        $(this).css({ opacity: 0.5 });
-        $(this).parent().append('<span id="spinner"></span>');
-        $.ajax({
-          type: "POST",
-          url: sms_url,
-          dataType: "json",
-          success: function(data) { 
-            status = data;
-            span_id = "sms-"+data.history_id;
-            console.log(this);
-            console.log(data);
-
-            $("."+span_id).html(data.msg);
-          }
-        });
-
-      });
-    });
 
 
     </script>

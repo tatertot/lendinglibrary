@@ -107,22 +107,13 @@ def search():
         #redirect to new page with amazon search results
         return redirect(url_for('amz_search', query=query, referrer=referrer))
       else:
+        #Update so will only grab first product's asin
         for i in results:
             similar_products = None
             
             if i.product.asin:
-                asin = i.product.asin
-                api = API(AWS_KEY, SECRET_KEY, 'us', ASSOC_TAG)
                 
-                try:
-                    similar_root = api.similarity_lookup(asin, ResponseGroup='Large')
-                    #~ from lxml import etree
-                    #~ print etree.tostring(root, pretty_print=True)
-                    nspace = similar_root.nsmap.get(None, '')
-                    similar_products = similar_root.xpath('//aws:Items/aws:Item', 
-                                 namespaces={'aws' : nspace})
-                except:
-                    similar_products = None
+                similar_products = similar_products_function(i.product.asin)
 
                 #render page with search results
                 if referrer == 'dashboard':
@@ -134,6 +125,19 @@ def search():
 
     return render_template("search.html", form=form)
 
+def similar_products_function(asin):
+    api = API(AWS_KEY, SECRET_KEY, 'us', ASSOC_TAG)
+    try:
+        similar_root = api.similarity_lookup(asin, ResponseGroup='Large')
+        #~ from lxml import etree
+        #~ print etree.tostring(root, pretty_print=True)
+        nspace = similar_root.nsmap.get(None, '')
+        similar_products = similar_root.xpath('//aws:Items/aws:Item', 
+                     namespaces={'aws' : nspace})
+    except:
+        similar_products = None
+
+    return similar_products
 
 
 @app.route("/dashboard")
