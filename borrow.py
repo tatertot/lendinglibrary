@@ -414,11 +414,12 @@ def send_sms(history_id):
     else:
         return jsonify(history_id=history_id, msg='SMS Failed, Please Try Again')
 
-# @app.route("/return_rate")
-# def return_rate(user_id):
-#     #get the return history of user, num times item returned after return est/item numbers borrowed
-#     items_returned = model.session.query(model.History).filter_by(lender_id=user_id).all()
+@app.route("/return_rate")
+def return_rate(user_id):
+    #get the return history of user, num times item returned after return est/item numbers borrowed
+    items_returned = model.session.query(model.History).filter_by(lender_id=user_id).all()
 
-#     return redirect(url_for('dashboard', user_id=user_id))
+    return redirect(url_for('dashboard', user_id=user_id))
+    
 if __name__ == "__main__":
     app.run(debug = True)
