@@ -314,8 +314,8 @@ def amazon(query):
 
     similar_root = api.similarity_lookup('B0058U6DQC', ResponseGroup='Large')
 
-    #product_root = api.item_lookup('B0058U6DQC', ResponseGroup='Large')
-    #product_root =  api.item_search(title='unicorn', ResponseGroup='Large')
+    product_root = api.item_lookup('B0058U6DQC', ResponseGroup='Large')
+    product_root =  api.item_search(title='unicorn', ResponseGroup='Large')
     more_products = api.item_search('Books', Publisher='Galileo Press')
     #~ from lxml import etree
     #~ print etree.tostring(root, pretty_print=True)
