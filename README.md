@@ -4,7 +4,7 @@ Borrow It Back : A Lending Library That Helps You Keep Track of Your Stuff
 A web application to help you keep track of the books, sporting goods, power tools, etc. that you let out to your friends and family. Enter your "items for rent" into your personal lending library, then you can easily check things in and out. Keep track of your delinquent friends and send them personal notifications when they fail to return the item on the due date.  Technologies include: Python, Flask, SQLAlchemy, Javascript, jQuery, Amazon Product API, Twilio and Twitter Bootstrap.
 
 <h3>Home Page</h3>
-<img src="https://goo.gl/photos/YbCkE5pNHPhEeuEn8" />
+<img src="https://lh3.googleusercontent.com/hYKl-2Pvx9-UdxEdjucLzQoUy9M-p6pOpqbstmsnexm9wzCQo3wZsCKp2lRCdBs2oYvR30hYIunvnBl_158jNTAhevP77xqe5N8mKkxe7UkWAZEsW221xZjH8ur4lvgRV3Pd2Fk=w760-h504-no" />
 <hr>
 <h3>Owner Dashboard with Notifications and Inventory</h3>
 <img src="https://goo.gl/photos/VgbQF3qhsxto1xE77" />
